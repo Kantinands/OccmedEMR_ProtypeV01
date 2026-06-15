@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OccMed EMR Mockup v5</title>
+  <style>
+    :root{
+      --bg:#ffffff; --surface:#ffffff; --soft:#f7f7f7; --line:#dcdcdc; --line2:#eeeeee;
+      --text:#171717; --muted:#666; --muted2:#888; --dark:#222; --danger:#8a1f1f;
+      --ok:#1f6b42; --warn:#8a5a00; --radius:12px; --shadow:0 1px 4px rgba(0,0,0,.08);
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--text);font-family:Tahoma,Arial,sans-serif;font-size:14px;line-height:1.5}
+    .topbar{border-bottom:1px solid var(--line);background:#fff;padding:16px 24px;position:sticky;top:0;z-index:20}
+    .topbar h1{margin:0;font-size:20px;font-weight:700;letter-spacing:.2px}.topbar p{margin:4px 0 0;color:var(--muted);font-size:12px}
+    .wrap{max-width:1360px;margin:0 auto;padding:18px 20px 36px}.tabs{display:flex;gap:8px;border-bottom:1px solid var(--line);margin-bottom:18px;padding-bottom:10px}
+    .tab{border:1px solid var(--line);background:#fff;border-radius:10px;padding:9px 14px;cursor:pointer;font-weight:700;color:#333}.tab.active{background:#111;color:#fff;border-color:#111}
+    .page{display:none}.page.active{display:block}.grid2{display:grid;grid-template-columns:360px 1fr;gap:18px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+    @media(max-width:980px){.grid2,.grid3,.grid4{grid-template-columns:1fr}.side{position:static!important}}
+    .card{border:1px solid var(--line);border-radius:var(--radius);background:#fff;box-shadow:var(--shadow);margin-bottom:14px;overflow:hidden}.card-head{background:#fafafa;border-bottom:1px solid var(--line);padding:12px 14px;font-weight:800;display:flex;justify-content:space-between;gap:10px;align-items:center}.card-body{padding:14px}.subhead{font-weight:800;margin:10px 0 8px;border-bottom:1px solid var(--line2);padding-bottom:6px;color:#333}
+    .side{position:sticky;top:82px;align-self:start}.hint{font-size:12px;color:var(--muted);background:#fafafa;border:1px dashed #d0d0d0;border-radius:10px;padding:10px;margin-bottom:10px}.mini{font-size:12px;color:var(--muted)}
+    label{font-weight:700;font-size:13px;color:#333}.field{margin-bottom:10px}.field label{display:block;margin-bottom:4px}.inline-label{display:inline-flex;align-items:center;gap:7px;margin:4px 14px 4px 0;font-weight:500;color:#222}.inline-label input{margin:0}
+    input[type=text],input[type=date],input[type=number],select,textarea{width:100%;border:1px solid #cfcfcf;border-radius:8px;background:#fff;padding:8px 9px;font-family:Tahoma,Arial,sans-serif;font-size:13px;color:#111}textarea{min-height:80px;resize:vertical}.small-input{max-width:90px}.btn{border:1px solid #111;background:#111;color:#fff;border-radius:9px;padding:8px 12px;font-weight:700;cursor:pointer}.btn.secondary{background:#fff;color:#111;border-color:#aaa}.btn.ghost{background:#fff;color:#333;border-color:#d0d0d0}.btn:hover{opacity:.88}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.muted{color:var(--muted)}
+    table{width:100%;border-collapse:collapse;background:#fff;margin:8px 0}th,td{border:1px solid var(--line);padding:7px 8px;text-align:left;vertical-align:top;font-size:13px}th{background:#f4f4f4;font-weight:800}.num{text-align:right}.center{text-align:center}.pill{display:inline-block;border:1px solid #ccc;border-radius:999px;padding:2px 8px;font-size:12px;background:#fff}.pill.ok{border-color:#b7d3c2;color:var(--ok);background:#f8fff9}.pill.warn{border-color:#e1c98d;color:var(--warn);background:#fffdf4}.pill.bad{border-color:#d9aaaa;color:var(--danger);background:#fff8f8}
+    .check-panel{display:grid;grid-template-columns:1fr;gap:4px}.check-panel .group-title{font-weight:800;margin-top:8px;border-top:1px solid var(--line2);padding-top:8px}.hidden{display:none!important}.empty{padding:20px;text-align:center;color:var(--muted);border:1px dashed #ccc;border-radius:12px;background:#fafafa}.section-title{font-size:17px;margin:16px 0 10px;padding-bottom:8px;border-bottom:2px solid #111}.source-note{font-size:11px;color:#777;margin-top:8px}
+    .pe-row{display:grid;grid-template-columns:190px 190px 1fr;gap:8px;align-items:center;border-bottom:1px solid var(--line2);padding:7px 0}.pe-row:last-child{border-bottom:0}.pe-system{font-weight:800}.pe-status{display:flex;gap:12px;flex-wrap:wrap}.pe-status label{font-weight:500}
+    .audio-table input,.lung-table input{min-width:72px;text-align:right}.audio-result{border:1px solid var(--line);background:#fafafa;border-radius:10px;padding:10px;margin-top:10px}.audio-result b{font-weight:800}.right-ear{border-left:4px solid #555}.left-ear{border-left:4px solid #aaa}.template-list{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}.template-chip{font-size:12px;border:1px solid #bbb;border-radius:999px;background:#fff;padding:4px 8px;cursor:pointer}.template-chip:hover{background:#f2f2f2}
+    .biomarker-row.abnormal{background:#fff8f8}.biomarker-row.normal{background:#fbfffb}.print-footer{border-top:1px solid var(--line);margin-top:24px;padding-top:10px;font-size:11px;color:#777;text-align:center}
+
+    .purpose-panel{border:1px solid var(--line);border-radius:12px;background:#fff;margin-bottom:14px;overflow:hidden;box-shadow:var(--shadow)}
+    .purpose-panel .panel-head{background:#fafafa;border-bottom:1px solid var(--line);padding:11px 14px;font-weight:800}
+    .purpose-panel .panel-body{padding:14px}
+    .placeholder-tools{border:1px dashed #bbb;background:#fafafa;border-radius:10px;padding:10px;margin:8px 0 12px}
+    .vision-checklist{display:grid;gap:8px;margin-top:8px}.vision-criterion{display:grid;grid-template-columns:1.1fr .9fr 1fr;gap:8px;align-items:center;border-bottom:1px solid var(--line2);padding:8px 0}.vision-criterion:last-child{border-bottom:none}.vision-criterion .crit-name{font-weight:700}.vision-criterion .crit-options{display:flex;gap:10px;flex-wrap:wrap}.vision-criterion .crit-options label{font-weight:500}.vision-criterion input[type=text]{padding:6px 8px}
+    .audiogram-wrap{margin-top:10px;border:1px solid var(--line);border-radius:10px;background:#fff;padding:10px;text-align:center}.audiogram-wrap canvas{max-width:100%;height:auto;border:1px solid var(--line2);border-radius:8px;background:#fff}.graph-note{font-size:11px;color:var(--muted);margin-top:4px;text-align:left}
+    .classification-box{display:flex;flex-wrap:wrap;gap:12px;margin:6px 0 10px}.classification-box label{font-weight:600;border:1px solid #ccc;border-radius:999px;padding:6px 10px;background:#fff}.classification-box input{margin-right:6px}
+    .soft-warning{border:1px dashed #c7a44a;background:#fffdf4;border-radius:10px;padding:10px;color:#5a4200;font-size:12px;margin:8px 0}
+    @media(max-width:980px){.vision-criterion{grid-template-columns:1fr}.classification-box{display:block}.classification-box label{display:block;margin:5px 0}}
+
+
+    /* Nordic pain location body map */
+    .nordic-map-wrap{display:grid;grid-template-columns:1.02fr .98fr;gap:12px;align-items:start;margin-top:10px}
+    .nordic-bodymap{border:1px solid var(--line);border-radius:12px;background:#fff;padding:10px;text-align:center}
+    .nordic-bodymap svg{width:100%;max-width:330px;height:auto}
+    .nordic-silhouette{fill:none;stroke:#333;stroke-width:2;opacity:.25}
+    .nordic-limb{fill:none;stroke:#333;stroke-width:2;opacity:.18}
+    .nordic-region{fill:transparent;stroke:rgba(0,0,0,0);cursor:pointer;transition:.15s}
+    .nordic-region:hover{fill:rgba(0,0,0,.07)}
+    .nordic-region.active{fill:rgba(0,0,0,.16);stroke:#111;stroke-width:2.5}
+    .nordic-region-list{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .nordic-region-btn{min-height:44px;border:1px solid var(--line);border-radius:10px;background:#fff;text-align:left;padding:8px 10px;cursor:pointer;font-weight:700;color:#333}
+    .nordic-region-btn:hover{background:#fafafa;border-color:#999}
+    .nordic-region-btn.active{background:#111;color:#fff;border-color:#111}
+    .nordic-selected{border:1px dashed #bbb;background:#fafafa;border-radius:10px;padding:9px 10px;margin-top:10px;font-size:12px;color:#333}
+    @media(max-width:980px){.nordic-map-wrap,.nordic-region-list{grid-template-columns:1fr}}
+
+    .patient-choice-grid{display:grid;grid-template-columns:1fr;gap:8px;margin-top:8px}.patient-choice{display:block;border:1px solid var(--line);border-radius:12px;background:#fff;padding:10px 11px;cursor:pointer;transition:.15s}.patient-choice:hover{background:#fafafa;border-color:#999}.patient-choice.active{border:2px solid #111;background:#fafafa}.patient-choice input{margin-right:8px}.patient-choice-title{font-weight:800}.patient-choice-meta{font-size:12px;color:var(--muted);margin-left:24px;line-height:1.45}.selected-person-bar{border:1px solid #111;border-radius:10px;padding:9px 10px;margin-bottom:10px;background:#fafafa;font-weight:800}.case-select-row{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:end}@media(max-width:980px){.case-select-row{grid-template-columns:1fr}}
+    @media print{.topbar,.tabs,.side,.btn,.template-list{display:none!important}.wrap{max-width:none;padding:0}.grid2{display:block}.card{box-shadow:none;break-inside:avoid}}
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <h1>OccMed EMR Mockup: Risk-based Health Examination</h1>
+    <p>Static HTML mockup · เลือกผู้รับการตรวจจากรายชื่อจำลอง · แพทย์สามารถแก้ไขผลตรวจและสรุปได้เอง</p>
+  </div>
+
+  <div class="wrap">
+    <div class="tabs">
+      <button class="tab active" id="tab1" onclick="showPage(1)">หน้า 1: ข้อมูลส่วนบุคคล</button>
+      <button class="tab" id="tab2" onclick="showPage(2)">หน้า 2: ผลตรวจสุขภาพ</button>
+      <button class="tab" onclick="window.print()">พิมพ์/บันทึก PDF</button>
+    </div>
+
+    <section id="page1" class="page active">
+      <div class="grid2">
+        <div class="card">
+          <div class="card-head">เลือกผู้รับการตรวจ Mockup</div>
+          <div class="card-body">
+            <input type="hidden" id="hnInput" value="" />
+            <datalist id="hnList"></datalist>
+            <div class="selected-person-bar" id="selectedPersonBar">ยังไม่ได้เลือกผู้รับการตรวจ</div>
+            <div class="case-select-row">
+              <div class="field">
+                <label for="patientSelect">เลือกชื่อ / HN</label>
+                <select id="patientSelect" onchange="selectCase(this.value)">
+                  <option value="">-- เลือกผู้รับการตรวจ --</option>
+                </select>
+              </div>
+              <button class="btn secondary" type="button" onclick="clearAll()">ล้างหน้า</button>
+            </div>
+            <div class="patient-choice-grid" id="patientChoiceGrid"></div>
+            <div class="hint" style="margin-top:12px">
+              แบบนี้เป็น mockup จึงเลือกคนจากรายชื่อได้เลย ไม่ต้องพิมพ์ HN เอง เมื่อเลือกแล้วข้อมูลหน้า 1 และหน้า 2 จะโหลดขึ้นอัตโนมัติ
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head">ข้อมูลผู้รับการตรวจ</div>
+          <div class="card-body">
+            <div class="grid3">
+              <div class="field"><label>ชื่อ-สกุล</label><input type="text" id="pName" /></div>
+              <div class="field"><label>อายุ</label><input type="text" id="pAge" /></div>
+              <div class="field"><label>เพศ</label><input type="text" id="pSex" /></div>
+              <div class="field"><label>หน่วยงาน</label><input type="text" id="pDept" /></div>
+              <div class="field"><label>ตำแหน่งงาน</label><input type="text" id="pJob" /></div>
+              <div class="field"><label>วันที่ตรวจ</label><input type="date" id="visitDate" /></div>
+            </div>
+            <div class="field"><label>ปัจจัยเสี่ยง/ลักษณะงาน</label><textarea id="pRisk"></textarea></div>
+            <div class="field"><label>หมายเหตุแพทย์</label><textarea id="doctorNote" placeholder="บันทึกเพิ่มเติม..."></textarea></div>
+            <button class="btn" type="button" onclick="showPage(2)">ไปหน้า 2: ผลตรวจสุขภาพ →</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="page2" class="page">
+      <div class="grid2">
+        <aside class="side">
+          <div class="card">
+            <div class="card-head">เลือกสิ่งที่ตรวจวันนี้</div>
+            <div class="card-body check-panel">
+              <div class="group-title">Purpose / Assessment</div>
+              <label class="inline-label"><input type="checkbox" class="purpose" value="surveillance" onchange="renderAll()"> Surveillance</label>
+              <label class="inline-label"><input type="checkbox" id="purposeFit" class="purpose" value="fit" onchange="renderAll()"> Fit for work</label>
+              <div id="fitCategoryBox" class="hidden" style="margin-left:18px">
+                <label class="inline-label"><input type="checkbox" class="fitcat" value="confined" onchange="renderAll()"> Confined space</label>
+                <label class="inline-label"><input type="checkbox" class="fitcat" value="driver" onchange="renderAll()"> Driver</label>
+                <label class="inline-label"><input type="checkbox" class="fitcat" value="food" onchange="renderAll()"> Food handler</label>
+              </div>
+
+              <div class="group-title">0. การซักประวัติ</div>
+              <label class="inline-label"><input type="checkbox" class="historyCheck" value="irritation" onchange="renderAll()"> ซักประวัติระคายเคือง</label>
+              <label class="inline-label"><input type="checkbox" class="historyCheck" value="cold" onchange="renderAll()"> ซักประวัติสัมผัสความเย็น</label>
+              <label class="inline-label"><input type="checkbox" class="historyCheck" value="msd" onchange="renderAll()"> ซักประวัติคัดกรองอาการทางระบบกระดูกและกล้ามเนื้อ (Nordic)</label>
+              <label class="inline-label"><input type="checkbox" class="historyCheck" value="cvs" onchange="renderAll()"> ซักประวัติคัดกรองกลุ่มอาการทางตาจากการใช้สายตาทำงาน</label>
+              <label class="inline-label"><input type="checkbox" class="historyCheck" value="npc" onchange="renderAll()"> ซักประวัติคัดกรองโรค Nasopharyngeal cancer</label>
+              <label class="inline-label"><input type="checkbox" class="historyCheck" value="numbness" onchange="renderAll()"> ซักประวัติอาการชามือ</label>
+
+              <div class="group-title">การตรวจพิเศษทางอาชีวอนามัย</div>
+              <label class="inline-label"><input type="checkbox" id="checkHearing" onchange="renderAll()"> Audiogram</label>
+              <label class="inline-label"><input type="checkbox" id="checkLung" onchange="renderAll()"> Spirometry</label>
+              <label class="inline-label"><input type="checkbox" id="checkVision" onchange="renderAll()"> Vision screening test</label>
+
+              <div class="hint">หากติ๊ก Fit for work และเลือก Confined space / Driver / Food handler ระบบจะแสดง “ตรวจร่างกาย/รายงานผลพิเศษ” ของ category นั้นตามรูปแบบเดิม</div>
+              <button class="btn secondary" type="button" onclick="loadCaseFromHN(true)">คืนค่า mockup ของ HN นี้</button>
+            </div>
+          </div>
+        </aside>
+
+        <main>
+          <div class="card">
+            <div class="card-head"><span>Visit snapshot</span><span class="mini" id="snapshotText">ยังไม่ได้เลือก HN</span></div>
+            <div class="card-body" id="patientSnapshot"></div>
+          </div>
+
+          <h2 class="section-title">0. การซักประวัติ</h2>
+          <div id="historyContainer"></div>
+
+
+          <h2 class="section-title">1. การตรวจร่างกาย</h2>
+          <div id="generalPEContainer"></div>
+          <div id="specialPEContainer"></div>
+
+          <h2 class="section-title">2. การตรวจพิเศษทางอาชีวอนามัย</h2>
+          <div id="examPanels"></div>
+
+          <h2 class="section-title">3. Biomarker</h2>
+          <div id="biomarkerContainer"></div>
+
+          <h2 class="section-title">4. สรุปผลการตรวจ</h2>
+          <div class="card">
+            <div class="card-head">Template ที่เลือกได้และแก้ไขได้</div>
+            <div class="card-body">
+              <div class="template-list" id="summaryChips"></div>
+              <div class="placeholder-tools">
+                <div class="mini"><b>ช่องเติมคำแทนจุดไข่ปลาใน template</b> เช่น “หลีกเลี่ยงงาน ....”, “ข้อจำกัดคือ ....”, “ตรวจซ้ำอีก .... สัปดาห์/เดือน”</div>
+                <div class="grid4" style="margin-top:8px">
+                  <div class="field"><label>งานที่ควรหลีกเลี่ยง</label><input type="text" id="avoidJobText" placeholder="เช่น ขับรถ / ควบคุมเครื่องจักร"></div>
+                  <div class="field"><label>ข้อห้าม/ข้อจำกัด</label><input type="text" id="restrictionText" placeholder="ระบุข้อจำกัด"></div>
+                  <div class="field"><label>ตรวจซ้ำใน</label><input type="text" id="repeatIntervalText" placeholder="เช่น 2 สัปดาห์ / 1 เดือน"></div>
+                  <div class="field"><label>Revise baseline ปี</label><input type="text" id="reviseBaselineYear" placeholder="เช่น 2568"></div>
+                </div>
+              </div>
+              <div class="row" style="margin-bottom:10px">
+                <button class="btn" type="button" onclick="buildSummary()">สร้างสรุปจากรายการที่ติ๊ก</button>
+                <button class="btn secondary" type="button" onclick="appendToSummary('แนะนำตรวจติดตามตามความเสี่ยงประจำปี อย่างน้อยปีละ 1 ครั้ง')">เพิ่มคำแนะนำติดตามประจำปี</button>
+              </div>
+              <textarea id="finalSummary" style="min-height:180px"></textarea>
+            </div>
+          </div>
+          <div class="print-footer">Mockup only · ไม่ควรใช้กับข้อมูลผู้ป่วยจริงบน public GitHub Pages</div>
+        </main>
+      </div>
+    </section>
+  </div>
+
+<script>
+const freqs = [500,1000,2000,3000,4000,6000];
+const today = new Date().toISOString().slice(0,10);
+let currentCase = null;
+
+const CASES = {
+  HN001:{hn:'HN001',name:'นายไผ่',age:'34 ปี',sex:'ชาย',dept:'RFS - ซ่อมบำรุง',job:'ช่างซ่อมบำรุง',date:today,risk:'สัมผัสเสียงดังจากเครื่องจักรและงานซ่อมบำรุง มีการใช้ ear plug เป็นครั้งคราว',purposes:['surveillance'],histories:['irritation'],exams:{hearing:true,lung:false,vision:false},fitCats:[],pe:{HEENT:['normal',''],Heart:['normal',''],Lungs:['normal',''],Abdomen:['normal',''],Skin:['normal',''],Musculoskeletal:['normal',''],Neurological:['normal','']},history:{irritation:'ไม่พบอาการระคายเคืองทางเดินหายใจ ผิวหนัง หรือดวงตาระหว่างทำงาน'},hearing:{R:{b:[10,10,10,15,20,20],m:[10,15,15,25,40,45],c:[10,10,15,25,35,40]},L:{b:[10,10,10,10,15,20],m:[10,10,10,15,20,25],c:[10,10,10,15,20,25]},interpret:'ระดับการได้ยินลดลงจากภาวะประสาทหูเสื่อม',opinion:'มีการเปลี่ยนแปลงระดับการได้ยินเมื่อเทียบกับผลการได้ยินพื้นฐานเกินเกณฑ์ที่กฎหมายกำหนด (15-dB shift)',advice:'นัดมาตรวจสมรรถภาพการได้ยินซ้ำ ภายใน 30 วัน\nแนะนำหลีกเลี่ยงการสัมผัสเสียงดัง สวม ear plug หรือ ear muff ตลอดเวลาที่สัมผัสเสียงดัง'},biomarkers:[]},
+  HN002:{hn:'HN002',name:'นายเฟิร์ส',age:'42 ปี',sex:'ชาย',dept:'คลังสินค้า GPO',job:'พนักงานขับรถฟอร์กลิฟต์',date:today,risk:'งานขับรถฟอร์กลิฟต์ ต้องประเมิน fit for work ด้านการมองเห็น การได้ยิน ความดัน น้ำตาล ECG และสารเสพติด',purposes:['fit'],histories:[],exams:{hearing:true,lung:false,vision:true},fitCats:['driver'],pe:{HEENT:['normal',''],Heart:['normal',''],Lungs:['normal','']},history:{},hearing:{R:{b:[10,10,10,15,15,20],m:[10,10,10,15,20,20],c:[10,10,10,15,20,20]},L:{b:[10,10,10,15,20,20],m:[10,10,10,20,20,25],c:[10,10,10,20,20,25]},interpret:'ปกติ',opinion:'ไม่มีการเปลี่ยนแปลงระดับการได้ยินเมื่อเทียบกับผลการได้ยินพื้นฐานเกินเกณฑ์ที่กฎหมายกำหนด (15-dB shift)',advice:'ตรวจเฝ้าระวังประจำปีต่อไป อย่างน้อยปีละ 1 ครั้ง'},vision:{interpret:'ปกติ',summary:'สามารถปฏิบัติงานได้',detail:'Visual acuity with correction 20/20 both eyes, color vision ปกติ, visual field screening ปกติ, depth perception ปกติ'},driver:{history:'ไม่เคยมีประวัติลมชัก เป็นลมหมดสติ หรือใช้สารเสพติด ไม่มีการใช้ยานอนหลับประจำ โรคประจำตัวควบคุมได้ดี',bp:'128/78 mmHg',glucose:'FBS 94 mg/dL',hba1c:'HbA1c 5.5%',ecg:'ECG ปกติ',amphetamine:'ตรวจไม่พบแอมเฟตามีนในปัสสาวะ',mental:'สุขภาพจิตปกติ',result:'สามารถปฏิบัติงานขับรถฟอร์กลิฟต์ได้ ไม่มีข้อจำกัด'},biomarkers:[]},
+  HN003:{hn:'HN003',name:'นางสาวจ๋า',age:'29 ปี',sex:'หญิง',dept:'โภชนาการ',job:'ผู้สัมผัสอาหาร',date:today,risk:'งานเตรียมอาหารและสัมผัสภาชนะอาหาร ตรวจ fit for work สำหรับ Food handler',purposes:['fit'],histories:[],exams:{hearing:false,lung:false,vision:false},fitCats:['food'],pe:{},history:{},food:{history:'ภายใน 1 สัปดาห์ ไม่มีคลื่นไส้อาเจียน ท้องเสีย ตัวเหลืองตาเหลือง ไข้ ไอ หรือผื่นหนอง',cxr:'ภาพถ่ายรังสีทรวงอกปกติ',hav:'Anti-HAV IgM negative',stool:'Stool examination ปกติ',culture:'Stool culture ปกติ',result:'Fit to work: สามารถทำงานสัมผัสอาหารได้'},biomarkers:[{chem:'Isopropanol',name:'Acetone in urine',result:'12 mg/L',ref:'BEI 25 mg/L; Thai BEI 50 mg/L',timing:'End of shift',interpret:'อยู่ในเกณฑ์อ้างอิง'}]},
+  HN004:{hn:'HN004',name:'นางสาวต้นน้ำ',age:'31 ปี',sex:'หญิง',dept:'ห้องปฏิบัติการเคมี',job:'นักวิทยาศาสตร์',date:today,risk:'สัมผัส Benzene และสารระคายเคืองในห้องปฏิบัติการ',purposes:['surveillance'],histories:['irritation'],exams:{hearing:false,lung:true,vision:false},fitCats:[],pe:{HEENT:['abnormal','เยื่อบุจมูกแดงเล็กน้อย'],Heart:['normal',''],Lungs:['normal','ไม่พบ wheezing'],Skin:['normal','ไม่พบ rash/eczema']},history:{irritation:'มีอาการแสบจมูกและคอแห้งหลังเลิกงานบางวัน ไม่มีหายใจเสียงวี้ด ไม่มีผื่น',special:'ประวัติพิเศษ: มีการหกของสารเคมีระดับเล็กน้อยเมื่อ 2 สัปดาห์ก่อน สวม PPE ครบ ไม่มีอาการเฉียบพลัน'},lung:{base:{fev1:2.92,fev1pct:93,fvc:3.42,fvcpct:95,ratio:85,ratioPct:98},cur:{fev1:2.76,fev1pct:88,fvc:3.35,fvcpct:93,ratio:82,ratioPct:95},interpret:'ปกติ',opinion:'ไม่มีการเปลี่ยนแปลงของสมรรถภาพปอดเมื่อเทียบกับสมรรถภาพปอดพื้นฐานอย่างมีนัยสำคัญ (15% FEV change)',advice:'ตรวจเฝ้าระวังประจำปีต่อไป อย่างน้อยปีละ 1 ครั้ง'},biomarkers:[{chem:'Benzene',name:'t,t-Muconic acid in urine',result:'380 µg/g creatinine',ref:'500 µg/g creatinine',timing:'End of shift',interpret:'อยู่ในเกณฑ์อ้างอิง'}]},
+  HN005:{hn:'HN005',name:'นางสาวหิมะ',age:'37 ปี',sex:'หญิง',dept:'คลังเย็น',job:'พนักงานคลังสินค้าเย็น',date:today,risk:'สัมผัสความเย็นเฉพาะที่และงานยืนเดินนาน',purposes:['surveillance'],histories:['cold','msd'],exams:{hearing:false,lung:false,vision:true},fitCats:[],pe:{Heart:['normal',''],Lungs:['normal',''],Musculoskeletal:['normal',''],Skin:['normal','ปลายนิ้วมือไม่มีสีซีด/ม่วง ไม่มีแผลความเย็นกัด']},history:{cold:'รู้สึกหนาวเล็กน้อยหลังทำงานในคลังเย็น ไม่มีปลายนิ้วเปลี่ยนสี ไม่มีแผลพุพอง ไม่มีเจ็บแน่นหน้าอก',msd:'มีปวดเมื่อยหลังส่วนล่างเป็นครั้งคราวหลังยืนทำงานนาน อาการไม่รบกวนการทำงาน'},vision:{interpret:'มีความผิดปกติในการมองใกล้ด้วยตาทั้งสองข้าง',summary:'มีความผิดปกติที่ควรได้รับการตรวจเพิ่มเติม แต่สามารถปฏิบัติงานได้',detail:'Near vision ลดลงสองข้าง แนะนำประเมินแว่นสายตาเพิ่มเติม; color vision ปกติ'},biomarkers:[]},
+  HN006:{hn:'HN006',name:'นางสาวบิ้ว',age:'45 ปี',sex:'หญิง',dept:'สำนักงาน',job:'เจ้าหน้าที่ธุรการ',date:today,risk:'ใช้คอมพิวเตอร์ต่อเนื่องและท่าทางการทำงานซ้ำ ๆ',purposes:['surveillance'],histories:['msd','cvs','numbness'],exams:{hearing:false,lung:false,vision:true},fitCats:[],pe:{HEENT:['normal',''],Musculoskeletal:['abnormal','กดเจ็บบริเวณ trapezius ทั้งสองข้าง ROM คอปกติ'],Neurological:['normal','motor/sensory grossly intact']},history:{msd:'ปวดคอ/บ่า/ไหล่ในช่วง 7 วันที่ผ่านมา ไม่มีชาร้าวลงแขนชัดเจน',cvs:'มีตาแห้งและล้าตาหลังใช้คอมพิวเตอร์นานเกิน 4 ชั่วโมง',numbness:'มีชามือเล็กน้อยขณะใช้ mouse นาน ๆ ไม่มีอ่อนแรง'},vision:{interpret:'มีความผิดปกติในการมองใกล้ด้วยตาข้างขวา',summary:'มีความผิดปกติที่ควรได้รับการตรวจเพิ่มเติม แต่สามารถปฏิบัติงานได้',detail:'Near vision OD ลดลงเล็กน้อย; far vision และ color vision ปกติ'},biomarkers:[]},
+  HN007:{hn:'HN007',name:'นายแก๊ป',age:'39 ปี',sex:'ชาย',dept:'งานระบบอาคาร',job:'ช่างระบบอับอากาศ',date:today,risk:'เข้าทำงานในที่อับอากาศเป็นครั้งคราว และมีการสวม respirator',purposes:['fit'],histories:[],exams:{hearing:false,lung:true,vision:false},fitCats:['confined'],pe:{},history:{special:'ไม่มีประวัติเจ็บแน่นหน้าอก เป็นลม ชัก โรคหอบหืดรุนแรง หรือ claustrophobia'},lung:{base:{fev1:3.18,fev1pct:86,fvc:4.05,fvcpct:88,ratio:78,ratioPct:92},cur:{fev1:3.05,fev1pct:82,fvc:3.96,fvcpct:86,ratio:77,ratioPct:91},interpret:'ปกติ',opinion:'ไม่มีการเปลี่ยนแปลงของสมรรถภาพปอดเมื่อเทียบกับสมรรถภาพปอดพื้นฐานอย่างมีนัยสำคัญ (15% FEV change)',advice:'สามารถติดตามประจำปี และเน้นการใช้ respirator ตามมาตรการ'},confined:{history:'ไม่มีอาการหายใจลำบาก ใจสั่น เจ็บแน่นหน้าอก เวียนศีรษะ หรือกลัวที่แคบขณะทำงาน',spo2:'SpO2 98% RA',ecg:'ECG ปกติ',cxr:'CXR ไม่มี active pulmonary lesion',resp:'ใช้ respirator ได้ ไม่มีอาการหายใจเหนื่อยผิดปกติ',result:'สามารถปฏิบัติงานในที่อับอากาศได้ โดยไม่มีข้อจำกัด'},biomarkers:[]},
+  HN008:{hn:'HN008',name:'นางสาวซัน',age:'50 ปี',sex:'หญิง',dept:'ห้องเครื่องมือแพทย์',job:'เจ้าหน้าที่จัดการเครื่องมือ',date:today,risk:'สัมผัสโลหะหนักบางชนิดในกระบวนการซ่อม/ทำความสะอาดอุปกรณ์',purposes:['surveillance'],histories:['irritation'],exams:{hearing:true,lung:false,vision:false},fitCats:[],pe:{HEENT:['normal',''],Heart:['normal',''],Lungs:['normal',''],Skin:['normal','']},history:{irritation:'ไม่พบอาการระคายเคืองทางเดินหายใจ ผิวหนัง หรือดวงตา'},hearing:{R:{b:[15,15,15,20,25,30],m:[15,15,15,20,30,35],c:[15,15,15,20,30,35]},L:{b:[15,15,15,20,25,30],m:[15,15,15,20,25,35],c:[15,15,15,20,25,35]},interpret:'ปกติ',opinion:'ไม่มีการเปลี่ยนแปลงระดับการได้ยินเมื่อเทียบกับผลการได้ยินพื้นฐานเกินเกณฑ์ที่กฎหมายกำหนด (15-dB shift)',advice:'ตรวจเฝ้าระวังประจำปีต่อไป อย่างน้อยปีละ 1 ครั้ง'},biomarkers:[{chem:'Lead',name:'Lead in blood',result:'110 µg/L',ref:'BEI 200 µg/L; Thai BEI 300 µg/L',timing:'Not critical',interpret:'อยู่ในเกณฑ์อ้างอิง'},{chem:'Cadmium',name:'Cadmium in urine',result:'6.2 µg/g creatinine',ref:'5 µg/g creatinine',timing:'Not critical',interpret:'สูงกว่าเกณฑ์อ้างอิง'}]}
+};
+
+const HISTORY_LABELS = {
+  irritation:'ซักประวัติระคายเคือง',
+  cold:'ซักประวัติสัมผัสความเย็น',
+  msd:'ซักประวัติคัดกรองอาการทางระบบกระดูกและกล้ามเนื้อ (Nordic)',
+  cvs:'ซักประวัติคัดกรองกลุ่มอาการทางตาจากการใช้สายตาทำงาน',
+  npc:'ซักประวัติคัดกรองโรค Nasopharyngeal cancer',
+  numbness:'ซักประวัติอาการชามือ'
+};
+
+function showPage(n){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page'+n).classList.add('active');
+  document.querySelectorAll('.tab').forEach((b,i)=>b.classList.toggle('active', i===n-1));
+}
+function init(){
+  renderPatientChooser();
+  selectCase('HN001');
+}
+function renderPatientChooser(){
+  const dl=document.getElementById('hnList');
+  const sel=document.getElementById('patientSelect');
+  const grid=document.getElementById('patientChoiceGrid');
+  if(dl) dl.innerHTML='';
+  if(sel) sel.innerHTML='<option value="">-- เลือกผู้รับการตรวจ --</option>';
+  if(grid) grid.innerHTML='';
+  Object.values(CASES).forEach(c=>{
+    if(dl){ const o=document.createElement('option'); o.value=c.hn; o.label=c.hn+' '+c.name; dl.appendChild(o); }
+    if(sel){ const opt=document.createElement('option'); opt.value=c.hn; opt.textContent=`${c.hn} · ${c.name} · ${c.job}`; sel.appendChild(opt); }
+    if(grid){
+      const label=document.createElement('label');
+      label.className='patient-choice';
+      label.dataset.hn=c.hn;
+      label.innerHTML=`<input type="radio" name="patientChoice" value="${c.hn}" onchange="selectCase(this.value)"><span class="patient-choice-title">${c.hn} · ${c.name}</span><div class="patient-choice-meta">${c.dept} · ${c.job}<br>${c.risk}</div>`;
+      grid.appendChild(label);
+    }
+  });
+}
+function updateSelectedCaseUI(hn){
+  const c=CASES[hn];
+  const sel=document.getElementById('patientSelect');
+  if(sel) sel.value=hn || '';
+  document.querySelectorAll('input[name="patientChoice"]').forEach(r=>{ r.checked=(r.value===hn); });
+  document.querySelectorAll('.patient-choice').forEach(x=>x.classList.toggle('active', x.dataset.hn===hn));
+  const bar=document.getElementById('selectedPersonBar');
+  if(bar) bar.textContent=c ? `เลือกแล้ว: ${c.hn} · ${c.name} · ${c.job}` : 'ยังไม่ได้เลือกผู้รับการตรวจ';
+}
+function selectCase(hn){
+  document.getElementById('hnInput').value=hn || '';
+  loadCaseFromHN(true);
+}
+function clearAll(){
+  document.getElementById('hnInput').value='';
+  currentCase=null;
+  updateSelectedCaseUI('');
+  fillPatient({});
+  document.querySelectorAll('.purpose,.historyCheck,.fitcat').forEach(x=>{x.checked=false});
+  ['checkHearing','checkLung','checkVision'].forEach(id=>{const el=document.getElementById(id); if(el) el.checked=false;});
+  renderAll();
+}
+function getChecked(cls){ return Array.from(document.querySelectorAll('.'+cls+':checked')).map(x=>x.value); }
+function setChecked(cls, arr){ document.querySelectorAll('.'+cls).forEach(x=>{x.checked=(arr||[]).includes(x.value)}); }
+function loadCaseFromHN(force=false){
+  const hn=document.getElementById('hnInput').value.trim().toUpperCase();
+  const c=CASES[hn];
+  updateSelectedCaseUI(c ? hn : '');
+  if(!c){ if(force){ currentCase=null; fillPatient({hn}); renderAll(); } return; }
+  currentCase=JSON.parse(JSON.stringify(c));
+  fillPatient(currentCase);
+  setChecked('purpose', currentCase.purposes);
+  setChecked('historyCheck', currentCase.histories);
+  setChecked('fitcat', currentCase.fitCats);
+  document.getElementById('checkHearing').checked=!!currentCase.exams?.hearing;
+  document.getElementById('checkLung').checked=!!currentCase.exams?.lung;
+  document.getElementById('checkVision').checked=!!currentCase.exams?.vision;
+  renderAll();
+}
+function fillPatient(c){
+  const ids={pName:'name',pAge:'age',pSex:'sex',pDept:'dept',pJob:'job',visitDate:'date',pRisk:'risk'};
+  Object.entries(ids).forEach(([id,k])=>document.getElementById(id).value=c?.[k]||'');
+  document.getElementById('doctorNote').value='';
+}
+
+function renderPurposePanels(){ return; }
+function renderSnapshot(){
+  const c=currentCase;
+  document.getElementById('snapshotText').textContent=c?`${c.hn} · ${c.name} · ${c.job}`:'ยังไม่ได้เลือก HN';
+  document.getElementById('patientSnapshot').innerHTML=c?`<div class="grid4"><div><b>HN</b><br>${c.hn}</div><div><b>ชื่อ</b><br>${c.name}</div><div><b>หน่วยงาน</b><br>${c.dept}</div><div><b>ตำแหน่ง</b><br>${c.job}</div></div><div class="hint" style="margin-top:10px">${c.risk}</div>`:'<div class="empty">เลือกผู้รับการตรวจในหน้า 1 ก่อน</div>';
+}
+function renderAll(){
+  document.getElementById('fitCategoryBox').classList.toggle('hidden', !document.getElementById('purposeFit').checked);
+  renderSnapshot();
+  renderHistory();
+  renderPE();
+  renderExamPanels();
+  renderBiomarker();
+  renderSummaryChips();
+}
+function escapeHtml(s){ return (s??'').toString().replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m])); }
+function radio(name, val, checked){return `<label><input type="radio" name="${name}" value="${val}" ${checked===val?'checked':''}> ${val==='normal'?'ปกติ':'ผิดปกติ'}</label>`;}
+function statusLine(name,val='normal',desc=''){
+  return `<div class="pe-row"><div class="pe-system">${name}</div><div class="pe-status">${radio('pe_'+name,'normal',val)}${radio('pe_'+name,'abnormal',val)}</div><input type="text" value="${escapeHtml(desc)}" placeholder="โปรดระบุรายละเอียด หากผิดปกติ"></div>`;
+}
+function renderHistory(){
+  const list=getChecked('historyCheck'); const c=currentCase||{};
+  if(list.length===0){document.getElementById('historyContainer').innerHTML='<div class="empty">ยังไม่ได้ติ๊กหัวข้อซักประวัติ</div>';return;}
+  let html='';
+  list.forEach(code=>{
+    const label=HISTORY_LABELS[code]||code;
+    const text=c.history?.[code]||defaultHistoryText(code);
+    html+=`<div class="card"><div class="card-head">${label}</div><div class="card-body">${historyDetailBlock(code,text)}</div></div>`;
+  });
+  document.getElementById('historyContainer').innerHTML=html;
+  setTimeout(initNordicBodyMap,0);
+}
+function defaultHistoryText(code){
+  const d={
+    irritation:'ไม่พบความผิดปกติจากอาการระคายเคือง',
+    cold:'ไม่พบความผิดปกติจากการสัมผัสความเย็น',
+    msd:'ไม่พบความผิดปกติของระบบกระดูกและกล้ามเนื้อ',
+    cvs:'ไม่พบความผิดปกติจากการใช้สายตาทำงาน',
+    npc:'ไม่พบความผิดปกติที่เข้าได้กับการคัดกรอง Nasopharyngeal cancer',
+    numbness:'ไม่พบความผิดปกติหรืออาการชามือ'
+  };
+  return d[code]||'';
+}
+function historyStatusFromText(text){ return (text||'').trim().startsWith('ไม่พบ') ? 'normal' : 'abnormal'; }
+function commonHistoryBlock(code,text){
+  const st=historyStatusFromText(text);
+  return `<div class="field"><label>รายละเอียด</label><textarea placeholder="รายละเอียด">${escapeHtml(text)}</textarea></div>
+  <div class="row"><label class="inline-label"><input type="radio" name="hist_${code}_status" value="normal" ${st==='normal'?'checked':''}> ไม่พบความผิดปกติ</label><label class="inline-label"><input type="radio" name="hist_${code}_status" value="abnormal" ${st==='abnormal'?'checked':''}> พบความผิดปกติ</label></div>`;
+}
+function historyDetailBlock(code,text){
+  if(code==='msd') return nordicHistoryBlock(text);
+  return commonHistoryBlock(code,text);
+}
+function nordicHistoryBlock(text){
+  const st=historyStatusFromText(text);
+  return `<div class="field"><label>รายละเอียด</label><textarea placeholder="รายละเอียด เช่น ลักษณะอาการ ระยะเวลา ความสัมพันธ์กับงาน และปัจจัยกระตุ้น">${escapeHtml(text)}</textarea></div>
+  <div class="row"><label class="inline-label"><input type="radio" name="hist_msd_status" value="normal" ${st==='normal'?'checked':''}> ไม่พบความผิดปกติ</label><label class="inline-label"><input type="radio" name="hist_msd_status" value="abnormal" ${st==='abnormal'?'checked':''}> พบความผิดปกติ</label></div>
+  <div class="subhead">ตำแหน่งอาการปวด</div>
+  <div class="hint">เลือกได้มากกว่า 1 ตำแหน่ง พื้นที่คลิกถูกขยาย และแยก “ไหล่” ออกจาก “หลังส่วนบน” ให้ห่างขึ้นเพื่อลดการเลือกผิดตำแหน่ง</div>
+  <div class="nordic-map-wrap" id="nordicPainMap">
+    <div class="nordic-bodymap">
+      <svg viewBox="0 0 280 430" aria-labelledby="nordicBodyTitle" role="img">
+        <title id="nordicBodyTitle">Nordic pain location body map</title>
+        <circle class="nordic-silhouette" cx="140" cy="52" r="31"></circle>
+        <rect class="nordic-silhouette" x="100" y="92" width="80" height="116" rx="28"></rect>
+        <rect class="nordic-limb" x="62" y="112" width="30" height="104" rx="15"></rect>
+        <rect class="nordic-limb" x="188" y="112" width="30" height="104" rx="15"></rect>
+        <rect class="nordic-limb" x="108" y="206" width="28" height="148" rx="14"></rect>
+        <rect class="nordic-limb" x="144" y="206" width="28" height="148" rx="14"></rect>
+
+        <rect class="nordic-region" data-nordic-region="neck" x="114" y="80" width="52" height="26" rx="11"></rect>
+        <rect class="nordic-region" data-nordic-region="shoulder" x="62" y="108" width="156" height="30" rx="13"></rect>
+        <rect class="nordic-region" data-nordic-region="upper_back" x="96" y="154" width="88" height="46" rx="15"></rect>
+        <rect class="nordic-region" data-nordic-region="lower_back" x="98" y="205" width="84" height="38" rx="13"></rect>
+        <rect class="nordic-region" data-nordic-region="elbow" x="50" y="154" width="42" height="44" rx="12"></rect>
+        <rect class="nordic-region" data-nordic-region="elbow" x="188" y="154" width="42" height="44" rx="12"></rect>
+        <rect class="nordic-region" data-nordic-region="wrist_hand" x="44" y="198" width="48" height="58" rx="13"></rect>
+        <rect class="nordic-region" data-nordic-region="wrist_hand" x="188" y="198" width="48" height="58" rx="13"></rect>
+        <rect class="nordic-region" data-nordic-region="hip_thigh" x="96" y="248" width="88" height="72" rx="18"></rect>
+        <rect class="nordic-region" data-nordic-region="knee" x="104" y="322" width="34" height="42" rx="12"></rect>
+        <rect class="nordic-region" data-nordic-region="knee" x="142" y="322" width="34" height="42" rx="12"></rect>
+        <rect class="nordic-region" data-nordic-region="ankle_foot" x="102" y="366" width="38" height="52" rx="13"></rect>
+        <rect class="nordic-region" data-nordic-region="ankle_foot" x="140" y="366" width="38" height="52" rx="13"></rect>
+      </svg>
+    </div>
+    <div>
+      <div class="nordic-region-list">
+        ${Object.entries(NORDIC_REGION_LABELS).map(([key,label])=>`<button type="button" class="nordic-region-btn" data-nordic-btn="${key}">${label}</button>`).join('')}
+      </div>
+      <div class="nordic-selected" id="nordicSelectedText">ยังไม่ได้เลือกตำแหน่งอาการปวด</div>
+      <input type="hidden" id="nordicPainLocations" name="nordic_pain_locations" value="">
+    </div>
+  </div>`;
+}
+const NORDIC_REGION_LABELS = {
+  neck:'คอ', shoulder:'ไหล่', upper_back:'หลังส่วนบน', lower_back:'หลังส่วนล่าง',
+  elbow:'ข้อศอก', wrist_hand:'ข้อมือ/มือ', hip_thigh:'สะโพก/ต้นขา', knee:'เข่า', ankle_foot:'ข้อเท้า/เท้า'
+};
+function initNordicBodyMap(){
+  const map=document.getElementById('nordicPainMap');
+  if(!map) return;
+  const hidden=document.getElementById('nordicPainLocations');
+  const selectedText=document.getElementById('nordicSelectedText');
+  const selected=new Set((hidden?.value||'').split(',').map(x=>x.trim()).filter(Boolean));
+  function sync(){
+    if(hidden) hidden.value=Array.from(selected).join(',');
+    map.querySelectorAll('[data-nordic-region]').forEach(el=>el.classList.toggle('active', selected.has(el.dataset.nordicRegion)));
+    map.querySelectorAll('[data-nordic-btn]').forEach(el=>el.classList.toggle('active', selected.has(el.dataset.nordicBtn)));
+    const labels=Array.from(selected).map(k=>NORDIC_REGION_LABELS[k]||k);
+    if(selectedText) selectedText.textContent=labels.length ? 'ตำแหน่งที่เลือก: '+labels.join(', ')+' | code: '+Array.from(selected).join(', ') : 'ยังไม่ได้เลือกตำแหน่งอาการปวด';
+  }
+  function toggle(key){ selected.has(key) ? selected.delete(key) : selected.add(key); sync(); }
+  map.querySelectorAll('[data-nordic-region]').forEach(el=>el.addEventListener('click',()=>toggle(el.dataset.nordicRegion)));
+  map.querySelectorAll('[data-nordic-btn]').forEach(el=>el.addEventListener('click',()=>toggle(el.dataset.nordicBtn)));
+  sync();
+}
+function hasSpecialFit(){ return document.getElementById('purposeFit').checked && getChecked('fitcat').length>0; }
+function peValue(system, pe){
+  const map={CVS:'Heart',Respi:'Lungs',Abd:'Abdomen',Neuro:'Neurological',Ext:'Musculoskeletal'};
+  return pe[system] || pe[map[system]] || ['normal',''];
+}
+function renderPE(){
+  if(hasSpecialFit()){
+    document.getElementById('generalPEContainer').innerHTML='';
+    renderSpecialPE(); return;
+  }
+  const c=currentCase||{}; const pe=c.pe||{};
+  const systems=['GA','HEENT','CVS','Respi','Abd','Neuro','Skin','Ext','อื่นๆ'];
+  const rows=systems.map(s=>{const v=peValue(s,pe); return statusLine(s,v?.[0]||'normal',v?.[1]||'');}).join('');
+  document.getElementById('generalPEContainer').innerHTML=`<div class="card"><div class="card-head">ตรวจร่างกายตามระบบ</div><div class="card-body">${rows}</div></div>`;
+  document.getElementById('specialPEContainer').innerHTML='';
+}
+function renderSpecialPE(){
+  const cats=getChecked('fitcat'); let html='';
+  cats.forEach(cat=>{ if(cat==='driver') html+=renderDriverPE(); if(cat==='food') html+=renderFoodPE(); if(cat==='confined') html+=renderConfinedPE(); });
+  document.getElementById('specialPEContainer').innerHTML=html || '<div class="empty">ติ๊ก category ของ Fit for work เพื่อแสดงตรวจพิเศษ</div>';
+}
+function renderConfinedPE(){const d=currentCase?.confined||{};return `<div class="card"><div class="card-head">Fit for work: Confined space · ตรวจร่างกาย/รายงานผลพิเศษ</div><div class="card-body">
+  <div class="field"><label>ซักประวัติเฉพาะงานที่อับอากาศ</label><textarea>${escapeHtml(d.history||'ไม่มีอาการหอบเหนื่อย เจ็บแน่นหน้าอก เป็นลม ชัก หรือกลัวที่แคบ')}</textarea></div>
+  ${statusLine('HEENT','normal','')}${statusLine('Heart','normal','')}${statusLine('Lungs','normal','')}${statusLine('Neurological','normal','')}${statusLine('Musculoskeletal','normal','')}
+  <div class="subhead">รายงานผลพิเศษ</div><div class="grid4"><div class="field"><label>SpO2</label><input type="text" value="${escapeHtml(d.spo2||'98% RA')}"></div><div class="field"><label>ECG</label><input type="text" value="${escapeHtml(d.ecg||'ปกติ')}"></div><div class="field"><label>CXR</label><input type="text" value="${escapeHtml(d.cxr||'ไม่มี active lesion')}"></div><div class="field"><label>Respirator tolerance</label><input type="text" value="${escapeHtml(d.resp||'ผ่าน')}"></div></div>
+  <div class="field"><label>สรุป Fit for work</label><select class="fitConclusion" data-cat="confined"><option ${sel(d.result,'สามารถปฏิบัติงานในที่อับอากาศได้ โดยไม่มีข้อจำกัด')}>สามารถปฏิบัติงานในที่อับอากาศได้ โดยไม่มีข้อจำกัด</option><option ${sel(d.result,'สามารถปฏิบัติงานในที่อับอากาศได้ โดยมีข้อห้ามหรือข้อจำกัด คือ ..........')}>สามารถปฏิบัติงานในที่อับอากาศได้ โดยมีข้อห้ามหรือข้อจำกัด คือ ..........</option><option ${sel(d.result,'ไม่สามารถปฏิบัติงานในที่อับอากาศได้')}>ไม่สามารถปฏิบัติงานในที่อับอากาศได้</option></select></div>
+  </div></div>`;}
+function renderDriverPE(){const d=currentCase?.driver||{};return `<div class="card"><div class="card-head">Fit for work: Driver · ตรวจร่างกาย/รายงานผลพิเศษ</div><div class="card-body">
+  <div class="field"><label>ซักประวัติเฉพาะงานขับรถ</label><textarea>${escapeHtml(d.history||'ไม่เคยมีโรคลมชัก เป็นลมหมดสติ ใช้ยานอนหลับ หรือสารเสพติด')}</textarea></div>
+  ${statusLine('HEENT','normal','')}${statusLine('Heart','normal','')}${statusLine('Lungs','normal','')}
+  <div class="subhead">รายงานผลพิเศษสำหรับ Driver</div><div class="grid3"><div class="field"><label>ความดันโลหิต</label><input type="text" value="${escapeHtml(d.bp||'')}"></div><div class="field"><label>น้ำตาล</label><input type="text" value="${escapeHtml(d.glucose||'')}"></div><div class="field"><label>HbA1c</label><input type="text" value="${escapeHtml(d.hba1c||'')}"></div><div class="field"><label>ECG</label><input type="text" value="${escapeHtml(d.ecg||'')}"></div><div class="field"><label>Urine amphetamine</label><input type="text" value="${escapeHtml(d.amphetamine||'ตรวจไม่พบแอมเฟตามีนในปัสสาวะ')}"></div><div class="field"><label>Mental health</label><input type="text" value="${escapeHtml(d.mental||'ปกติ')}"></div></div>
+  <div class="field"><label>สรุป Fit for work</label><select class="fitConclusion" data-cat="driver"><option ${sel(d.result,'สามารถปฏิบัติงานขับรถได้ โดยไม่มีข้อจำกัด')}>สามารถปฏิบัติงานขับรถได้ โดยไม่มีข้อจำกัด</option><option ${sel(d.result,'สามารถปฏิบัติงานขับรถได้ โดยมีข้อห้ามหรือข้อจำกัด คือ ..........')}>สามารถปฏิบัติงานขับรถได้ โดยมีข้อห้ามหรือข้อจำกัด คือ ..........</option><option ${sel(d.result,'ไม่สามารถปฏิบัติงานขับรถได้')}>ไม่สามารถปฏิบัติงานขับรถได้</option></select></div>
+  <div class="source-note">อิงรูปแบบรายการตรวจพนักงานขับรถ/ฟอร์กลิฟต์: ซักประวัติลมชัก เบาหวาน ความดัน โรคหัวใจ stroke เป็นลม ยานอนหลับ สารเสพติด และรายงานผล BP, glucose, HbA1c, ECG, amphetamine, mental health</div>
+  </div></div>`;}
+function renderFoodPE(){const d=currentCase?.food||{};return `<div class="card"><div class="card-head">Fit for work: Food handler · ตรวจร่างกาย/รายงานผลพิเศษ</div><div class="card-body">
+  <div class="field"><label>ซักประวัติเฉพาะผู้สัมผัสอาหาร</label><textarea>${escapeHtml(d.history||'ไม่มีอาการทางเดินอาหาร ทางเดินหายใจ ผิวหนัง และไม่มีสิ่งคัดหลั่งผิดปกติ')}</textarea></div>
+  ${statusLine('Hair and Scalp','normal','')}${statusLine('Eye','normal','')}${statusLine('Ear','normal','')}${statusLine('Gum/Teeth/Mouth','normal','')}${statusLine('Tonsils','normal','')}${statusLine('Jaundice','normal','No')}${statusLine('Heart & Lungs','normal','')}${statusLine('Abdomen','normal','')}${statusLine('Skin','normal','ไม่มี rash/wound/pus')}${statusLine('Nails','normal','short, dry, clean; no artificial nails')}
+  <div class="subhead">การตรวจเพิ่มเติม</div><div class="grid4"><div class="field"><label>Chest X-ray</label><input type="text" value="${escapeHtml(d.cxr||'ภาพถ่ายรังสีทรวงอกปกติ')}"></div><div class="field"><label>Anti-HAV IgM</label><input type="text" value="${escapeHtml(d.hav||'Negative')}"></div><div class="field"><label>Stool examination</label><input type="text" value="${escapeHtml(d.stool||'ปกติ')}"></div><div class="field"><label>Stool culture</label><input type="text" value="${escapeHtml(d.culture||'ปกติ')}"></div></div>
+  <div class="field"><label>สรุป Fit for work</label><select class="fitConclusion" data-cat="food"><option ${sel(d.result,'สามารถปฏิบัติงานในตำแหน่งงานผู้สัมผัสอาหารได้ โดยไม่มีข้อจำกัด')}>สามารถปฏิบัติงานในตำแหน่งงานผู้สัมผัสอาหารได้ โดยไม่มีข้อจำกัด</option><option ${sel(d.result,'สามารถปฏิบัติงานในตำแหน่งงานผู้สัมผัสอาหารได้ โดยมีข้อห้ามหรือข้อจำกัด คือ ..........')}>สามารถปฏิบัติงานในตำแหน่งงานผู้สัมผัสอาหารได้ โดยมีข้อห้ามหรือข้อจำกัด คือ ..........</option><option ${sel(d.result,'ไม่สามารถปฏิบัติงานในตำแหน่งงานผู้สัมผัสอาหารได้ เป็นเวลา .......... วัน/สัปดาห์ หรือจนกว่าผลตรวจอุจจาระจะเป็นปกติ')}>ไม่สามารถปฏิบัติงานในตำแหน่งงานผู้สัมผัสอาหารได้ เป็นเวลา .......... วัน/สัปดาห์ หรือจนกว่าผลตรวจอุจจาระจะเป็นปกติ</option></select></div>
+  <div class="source-note">อิงแบบตรวจ Food handler: Hair/scalp, Eye, Ear, Gum/Teeth/Mouth, Tonsils, Jaundice, Heart & Lungs, Abdomen, Skin, Nails และ CXR, Anti-HAV IgM, stool exam, stool culture</div>
+  </div></div>`;}
+function sel(actual, target){return (actual||'').startsWith(target.slice(0,20))?'selected':'';}
+function renderExamPanels(){
+  let html='';
+  if(document.getElementById('checkHearing').checked) html+=renderHearing();
+  if(document.getElementById('checkLung').checked) html+=renderLung();
+  if(document.getElementById('checkVision').checked) html+=renderVision();
+  document.getElementById('examPanels').innerHTML=html||'<div class="empty">ยังไม่ได้ติ๊ก Audiogram / Spirometry / Vision screening test</div>';
+  setTimeout(()=>{ if(document.getElementById('checkHearing').checked) calcAudio(); if(document.getElementById('checkLung').checked) calcLung(); },0);
+}
+function renderHearing(){const h=currentCase?.hearing||emptyHearing();return `<div class="card"><div class="card-head">การตรวจพิเศษทางอาชีวอนามัย: Audiogram · Baseline / Monitoring / Confirmation</div><div class="card-body">
+  <div class="hint">เกณฑ์คำนวณ mockup: NIOSH ≥15 dB shift ที่ 500–6000 Hz, OSHA avg shift 2/3/4 kHz ≥10 dB, AAO-HNS low/high average shift, Coles/Wilson notch</div>
+  <div class="grid2">${audioEar('R','หูขวา',h.R)}${audioEar('L','หูซ้าย',h.L)}</div>
+  <button class="btn secondary" type="button" onclick="calcAudio()">คำนวณ Audiogram</button>
+  <div id="audioCalc" class="audio-result"></div>
+  <div class="audiogram-wrap"><canvas id="audiogramCanvas" width="760" height="430"></canvas><div class="graph-note">กราฟแสดงค่า dB HL แบบ audiogram: ค่า dB มากขึ้นจะอยู่ด้านล่าง, baseline = เส้นทึบ, monitoring = เส้นประ, confirmation = เส้นจุดประ</div></div>
+  <div class="grid3" style="margin-top:10px"><div class="field"><label>แปลผล</label><select><option>${h.interpret||'ปกติ'}</option><option>ปกติ</option><option>ระดับการได้ยินลดลงจากภาวะการนำเสียงผิดปกติ</option><option>ระดับการได้ยินลดลงจากภาวะประสาทหูเสื่อม</option><option>ระดับการได้ยินลดลงจากภาวะการนำเสียงผิดปกติและภาวะประสาทหูเสื่อม</option></select></div><div class="field"><label>สรุปเทียบ baseline</label><select><option>${h.opinion||'ไม่มีการเปลี่ยนแปลงระดับการได้ยินเมื่อเทียบกับผลการได้ยินพื้นฐานเกินเกณฑ์ที่กฎหมายกำหนด (15-dB shift)'}</option><option>มีการเปลี่ยนแปลงระดับการได้ยินเมื่อเทียบกับผลการได้ยินพื้นฐานเกินเกณฑ์ที่กฎหมายกำหนด (15-dB shift)</option><option>ไม่มีการเปลี่ยนแปลงระดับการได้ยินเมื่อเทียบกับผลการได้ยินพื้นฐานเกินเกณฑ์ที่กฎหมายกำหนด (15-dB shift)</option></select></div><div class="field"><label>คำแนะนำ</label><textarea>${escapeHtml(h.advice||'ตรวจเฝ้าระวังประจำปีต่อไป อย่างน้อยปีละ 1 ครั้ง')}</textarea></div></div>
+  <div class="placeholder-tools"><div class="grid3"><div class="field"><label>Revise baseline audiogram โดยใช้ผลปี</label><input type="text" id="hearingBaselineYear" placeholder="เช่น 2568"></div><div class="field"><label>นัดตรวจซ้ำภายใน</label><input type="text" id="hearingRepeatInterval" placeholder="เช่น 30 วัน"></div><div class="field"><label>หมายเหตุเพิ่มเติม</label><input type="text" id="hearingExtraNote" placeholder="ระบุเพิ่มเติม"></div></div></div>
+  </div></div>`;}
+function emptyHearing(){return {R:{b:[0,0,0,0,0,0],m:[0,0,0,0,0,0],c:[0,0,0,0,0,0]},L:{b:[0,0,0,0,0,0],m:[0,0,0,0,0,0],c:[0,0,0,0,0,0]}};}
+function audioEar(ear,label,data){let rows=freqs.map((f,i)=>`<tr><td>${f}</td><td><input class="aud" data-ear="${ear}" data-type="b" data-f="${f}" type="number" value="${data?.b?.[i]??0}" oninput="calcAudio()"></td><td><input class="aud" data-ear="${ear}" data-type="m" data-f="${f}" type="number" value="${data?.m?.[i]??0}" oninput="calcAudio()"></td><td><input class="aud" data-ear="${ear}" data-type="c" data-f="${f}" type="number" value="${data?.c?.[i]??''}" oninput="calcAudio()"></td></tr>`).join('');return `<div class="card ${ear==='R'?'right-ear':'left-ear'}" style="box-shadow:none"><div class="card-head">${label}</div><div class="card-body"><table class="audio-table"><tr><th>Hz</th><th>Baseline</th><th>Monitoring</th><th>Confirmation</th></tr>${rows}</table></div></div>`;}
+function getAud(ear,type){let o={}; document.querySelectorAll(`.aud[data-ear="${ear}"][data-type="${type}"]`).forEach(x=>o[x.dataset.f]=Number(x.value||0)); return o;}
+function avg(o, arr){return arr.reduce((s,f)=>s+(Number(o[f])||0),0)/arr.length;}
+function notch(o){const low=avg(o,[500,1000,2000]); const mid=[3000,4000,6000].map(f=>({f,v:o[f]-low})); const max=mid.sort((a,b)=>b.v-a.v)[0]; const coles=[3000,4000,6000].filter(f=>o[f]-Math.min(o[500],o[1000],o[2000])>=10); return {coles,wilson:max.v>=15?max:null};}
+function evalEar(ear){const b=getAud(ear,'b'),m=getAud(ear,'m'),c=getAud(ear,'c'); const shifts=freqs.map(f=>({f,mon:m[f]-b[f],conf:c[f]-b[f]})); const niosh=shifts.filter(x=>x.mon>=15).map(x=>x.f); const osha=avg(m,[2000,3000,4000])-avg(b,[2000,3000,4000]); const aaoLow=avg(m,[500,1000,2000])-avg(b,[500,1000,2000]); const aaoHigh=avg(m,[3000,4000,6000])-avg(b,[3000,4000,6000]); return {ear,shifts,niosh,osha,aaoLow,aaoHigh,notch:notch(m)};}
+function calcAudio(){if(!document.getElementById('audioCalc'))return; const R=evalEar('R'),L=evalEar('L'); const line=e=>`<tr><td>${e.ear==='R'?'ขวา':'ซ้าย'}</td><td>${e.niosh.length?'<span class="pill bad">พบ</span> '+e.niosh.join(', ')+' Hz':'<span class="pill ok">ไม่พบ</span>'}</td><td>${e.osha.toFixed(1)} dB ${e.osha>=10?'<span class="pill bad">OSHA STS</span>':''}</td><td>low ${e.aaoLow.toFixed(1)} / high ${e.aaoHigh.toFixed(1)} dB</td><td>Coles ${e.notch.coles.length?e.notch.coles.join(','):'no'}; Wilson ${e.notch.wilson?e.notch.wilson.f+' Hz':'no'}</td></tr>`; document.getElementById('audioCalc').innerHTML=`<b>ผลคำนวณ shift/notch</b><table><tr><th>หู</th><th>NIOSH 15-dB shift</th><th>OSHA avg shift</th><th>AAO-HNS</th><th>Notching</th></tr>${line(R)}${line(L)}</table>`; drawAudiogram();}
+function drawAudiogram(){
+  const canvas=document.getElementById('audiogramCanvas'); if(!canvas) return;
+  const ctx=canvas.getContext('2d'); ctx.clearRect(0,0,canvas.width,canvas.height);
+  const padL=58,padR=24,padT=26,padB=46,w=canvas.width-padL-padR,h=canvas.height-padT-padB;
+  const minDb=-10,maxDb=120; const x=f=>padL+(freqs.indexOf(Number(f))/(freqs.length-1))*w; const y=db=>padT+((Number(db)-minDb)/(maxDb-minDb))*h;
+  ctx.fillStyle='#fff'; ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctx.strokeStyle='#e6e6e6'; ctx.lineWidth=1; ctx.beginPath();
+  freqs.forEach(f=>{ctx.moveTo(x(f),padT);ctx.lineTo(x(f),padT+h);}); for(let db=0;db<=120;db+=10){ctx.moveTo(padL,y(db));ctx.lineTo(padL+w,y(db));} ctx.stroke();
+  ctx.strokeStyle='#111'; ctx.lineWidth=1.5; ctx.beginPath(); ctx.moveTo(padL,padT); ctx.lineTo(padL,padT+h); ctx.lineTo(padL+w,padT+h); ctx.stroke();
+  ctx.fillStyle='#333'; ctx.font='12px Tahoma, Arial'; freqs.forEach(f=>ctx.fillText(String(f),x(f)-15,padT+h+20)); for(let db=0;db<=120;db+=20)ctx.fillText(String(db),18,y(db)+4); ctx.fillText('Hz',padL+w/2-8,padT+h+38); ctx.save(); ctx.translate(14,padT+h/2+28); ctx.rotate(-Math.PI/2); ctx.fillText('dB HL',0,0); ctx.restore();
+  const series=[
+    {label:'R baseline',ear:'R',type:'b',dash:[],shape:'O',shade:'#111'}, {label:'R monitoring',ear:'R',type:'m',dash:[8,4],shape:'O',shade:'#555'}, {label:'R confirmation',ear:'R',type:'c',dash:[2,4],shape:'O',shade:'#888'},
+    {label:'L baseline',ear:'L',type:'b',dash:[],shape:'X',shade:'#111'}, {label:'L monitoring',ear:'L',type:'m',dash:[8,4],shape:'X',shade:'#555'}, {label:'L confirmation',ear:'L',type:'c',dash:[2,4],shape:'X',shade:'#888'}
+  ];
+  series.forEach(s=>{const data=getAud(s.ear,s.type); ctx.setLineDash(s.dash); ctx.strokeStyle=s.shade; ctx.lineWidth=2; ctx.beginPath(); let first=true; freqs.forEach(f=>{if(data[f]===undefined||data[f]===null||isNaN(data[f]))return; const xx=x(f),yy=y(data[f]); if(first){ctx.moveTo(xx,yy);first=false;}else ctx.lineTo(xx,yy);}); ctx.stroke(); ctx.setLineDash([]); freqs.forEach(f=>{const val=data[f]; if(val===undefined||val===null||isNaN(val))return; const xx=x(f),yy=y(val); ctx.strokeStyle=s.shade; ctx.fillStyle='#fff'; ctx.lineWidth=2; if(s.shape==='O'){ctx.beginPath();ctx.arc(xx,yy,5,0,Math.PI*2);ctx.fill();ctx.stroke();}else{ctx.beginPath();ctx.moveTo(xx-5,yy-5);ctx.lineTo(xx+5,yy+5);ctx.moveTo(xx+5,yy-5);ctx.lineTo(xx-5,yy+5);ctx.stroke();}});});
+  ctx.font='12px Tahoma, Arial'; let ly=18; series.forEach((s,i)=>{const lx=520+(i%2)*115; if(i%2===0 && i>0) ly+=18; ctx.strokeStyle=s.shade; ctx.setLineDash(s.dash); ctx.beginPath(); ctx.moveTo(lx,ly-4); ctx.lineTo(lx+24,ly-4); ctx.stroke(); ctx.setLineDash([]); ctx.fillStyle='#333'; ctx.fillText(s.label,lx+30,ly);});
+}
+function renderLung(){const l=currentCase?.lung||{base:{fev1:'',fev1pct:'',fvc:'',fvcpct:'',ratio:'',ratioPct:''},cur:{fev1:'',fev1pct:'',fvc:'',fvcpct:'',ratio:'',ratioPct:''},interpret:'ปกติ',opinion:'',advice:''}; const rows=[['FEV1','fev1','L'],['FVC','fvc','L'],['FEV1/FVC','ratio','%']].map(r=>lungRow(r[0],r[1],r[2],l)).join('');return `<div class="card"><div class="card-head">การตรวจพิเศษทางอาชีวอนามัย: Spirometry · เทียบ Baseline</div><div class="card-body"><table class="lung-table"><tr><th>Parameter</th><th>Baseline value</th><th>Baseline % predicted</th><th>Current value</th><th>Current % predicted</th><th>Δ value</th><th>Δ % from baseline value</th></tr>${rows}</table><button class="btn secondary" type="button" onclick="calcLung()">คำนวณ Lung change</button><div id="lungCalc" class="audio-result"></div><div class="grid3"><div class="field"><label>แปลผล</label><select><option>${escapeHtml(l.interpret||'ปกติ')}</option><option>ไม่สามารถแปลผลการตรวจได้</option><option>ปกติ</option><option>พบการอุดกั้นของหลอดลม ระดับน้อย</option><option>พบการอุดกั้นของหลอดลม ระดับปานกลาง</option><option>พบการจำกัดการขยายตัวของหลอดลม ระดับ ..........</option><option>พบการอุดกั้นและจำกัดการขยายตัวของหลอดลม</option></select></div><div class="field"><label>สรุปเทียบ baseline</label><select><option>${escapeHtml(l.opinion||'ไม่มีการเปลี่ยนแปลงของสมรรถภาพปอดเมื่อเทียบกับสมรรถภาพปอดพื้นฐานอย่างมีนัยสำคัญ (15% FEV change)')}</option><option>มีการเปลี่ยนแปลงของสมรรถภาพปอดเมื่อเทียบกับสมรรถภาพปอดพื้นฐานอย่างมีนัยสำคัญ (15% FEV change)</option><option>ไม่มีการเปลี่ยนแปลงของสมรรถภาพปอดเมื่อเทียบกับสมรรถภาพปอดพื้นฐานอย่างมีนัยสำคัญ (15% FEV change)</option></select></div><div class="field"><label>คำแนะนำ</label><textarea>${escapeHtml(l.advice||'ตรวจเฝ้าระวังประจำปีต่อไป อย่างน้อยปีละ 1 ครั้ง')}</textarea></div></div></div></div>`;}
+function lungRow(label,key,unit,l){return `<tr><td>${label}</td><td><input class="lung" data-k="${key}" data-t="base" type="number" step="0.01" value="${l.base?.[key]??''}"> ${unit}</td><td><input class="lung" data-k="${key}" data-t="basepct" type="number" step="1" value="${l.base?.[key+'pct']??l.base?.[key+'Pct']??''}"> %</td><td><input class="lung" data-k="${key}" data-t="cur" type="number" step="0.01" value="${l.cur?.[key]??''}"> ${unit}</td><td><input class="lung" data-k="${key}" data-t="curpct" type="number" step="1" value="${l.cur?.[key+'pct']??l.cur?.[key+'Pct']??''}"> %</td><td class="num" id="d_${key}"></td><td class="num" id="dp_${key}"></td></tr>`;}
+function lungVal(k,t){const el=document.querySelector(`.lung[data-k="${k}"][data-t="${t}"]`); return Number(el?.value||0);}
+function calcLung(){['fev1','fvc','ratio'].forEach(k=>{const b=lungVal(k,'base'),c=lungVal(k,'cur'); const d=c-b; const p=b?d/b*100:0; const el=document.getElementById('d_'+k), ep=document.getElementById('dp_'+k); if(el)el.textContent=d.toFixed(2); if(ep)ep.innerHTML=(p<=-15?`<span class="pill bad">${p.toFixed(1)}%</span>`:`${p.toFixed(1)}%`);}); const fev1p=lungVal('fev1','curpct'); const severity=fev1p>=70?'mild/normal range by FEV1 %pred':fev1p>=60?'moderate':fev1p>=50?'moderately severe':fev1p>=35?'severe':'very severe'; if(document.getElementById('lungCalc'))document.getElementById('lungCalc').innerHTML=`FEV1 % predicted ปัจจุบัน = <b>${fev1p||'-'}%</b>; severity guide = <b>${severity}</b>; หาก FEV1 value ลดลง ≥15% จาก baseline ให้พิจารณาว่ามี significant FEV change`;
+}
+
+function pickVision(v,key){
+  const text=((v?.interpret||'')+' '+(v?.detail||'')).toLowerCase();
+  if(key.includes('near') && text.includes('ใกล้')) return 'fail';
+  if(key.includes('far') && text.includes('ไกล')) return 'fail';
+  if(key.includes('color') && text.includes('ตาบอดสี')) return 'abnormal';
+  if(key.includes('field') && text.includes('ลานสายตา')) return 'abnormal';
+  return key.includes('color')||key.includes('field')||key.includes('phoria') ? 'normal' : 'pass';
+}
+function visionCriterion(no, th, en, key, mode, v){
+  const val=pickVision(v,key);
+  const opts=mode==='normal' ? [['normal','ปกติ'],['abnormal','ผิดปกติ']] : [['pass','ผ่านเกณฑ์'],['fail','ต่ำกว่าเกณฑ์']];
+  return `<div class="vision-criterion"><div class="crit-name">${no} ${th}<br><span class="mini">${en}</span></div><div class="crit-options">${opts.map(o=>`<label><input type="radio" name="${key}" value="${o[0]}" ${val===o[0]?'checked':''}> ${o[1]}</label>`).join('')}</div><input type="text" name="${key}_note" placeholder="รายละเอียด/ค่า VA/หมายเหตุ"></div>`;
+}
+function visionSummaryChanged(){
+  const s=document.getElementById('visionSummarySelect'); const box=document.getElementById('visionAvoidBox');
+  if(box) box.classList.toggle('hidden', !(s && s.value.includes('หลีกเลี่ยงงาน')));
+}
+function renderVision(){const v=currentCase?.vision||{interpret:'ปกติ',summary:'สามารถปฏิบัติงานได้',detail:''};return `<div class="card"><div class="card-head">การตรวจพิเศษทางอาชีวอนามัย: Vision screening test</div><div class="card-body">
+  <div class="hint">รายละเอียดผลตรวจทำเป็นช่องติ๊กตามรูปแบบ index_new: Far vision, Near vision, Color deficiency, Phoria และ Visual field</div>
+  <div class="field"><label>Job ที่ตรวจ</label><select><option>Job 1</option><option>Job 2</option><option>Job 3</option><option>Job 4</option><option>Job 5</option><option>Job 6</option></select></div>
+  <div class="subhead">1. การมองภาพระยะไกล (Far vision test)</div><div class="vision-checklist">
+    ${visionCriterion('1.1','การมองด้วยสองตา','Binocular vision','vision_far_binocular','passfail',v)}
+    ${visionCriterion('1.2','การมองภาพด้วยสองตา','Visual acuity - Both eyes','vision_far_va_both','passfail',v)}
+    ${visionCriterion('1.3','การมองภาพด้วยตาขวา','Visual acuity - Right eye','vision_far_va_right','passfail',v)}
+    ${visionCriterion('1.4','การมองภาพด้วยตาซ้าย','Visual acuity - Left eye','vision_far_va_left','passfail',v)}
+    ${visionCriterion('1.5','การมองภาพสามมิติ','Stereo depth','vision_stereo_depth','passfail',v)}
+    ${visionCriterion('1.6','การตรวจคัดกรองตาบอดสี','Color deficiency screening','vision_color_deficiency','normal',v)}
+    ${visionCriterion('1.7','ความสมดุลกล้ามเนื้อตาแนวตั้ง','Vertical phoria','vision_far_vertical_phoria','normal',v)}
+    ${visionCriterion('1.8','ความสมดุลกล้ามเนื้อตาแนวนอน','Lateral phoria','vision_far_lateral_phoria','normal',v)}
+  </div>
+  <div class="subhead">2. การมองภาพระยะใกล้ (Near vision test)</div><div class="vision-checklist">
+    ${visionCriterion('2.1','การมองด้วยสองตา','Binocular vision','vision_near_binocular','passfail',v)}
+    ${visionCriterion('2.2','การมองภาพด้วยสองตา','Visual acuity - Both eyes','vision_near_va_both','passfail',v)}
+    ${visionCriterion('2.3','การมองภาพด้วยตาขวา','Visual acuity - Right eye','vision_near_va_right','passfail',v)}
+    ${visionCriterion('2.4','การมองภาพด้วยตาซ้าย','Visual acuity - Left eye','vision_near_va_left','passfail',v)}
+    ${visionCriterion('2.5','ความสมดุลกล้ามเนื้อตาแนวตั้ง','Vertical phoria','vision_near_vertical_phoria','normal',v)}
+    ${visionCriterion('2.6','ความสมดุลกล้ามเนื้อตาแนวนอน','Lateral phoria','vision_near_lateral_phoria','normal',v)}
+  </div>
+  <div class="subhead">3. ลานสายตา (Visual field)</div><div class="vision-checklist">${visionCriterion('3.1','ลานสายตา','Visual field','vision_visual_field','normal',v)}</div>
+  <div class="grid3" style="margin-top:12px"><div class="field"><label>แปลผล</label><select><option>${escapeHtml(v.interpret)}</option><option>ปกติ</option><option>มีความผิดปกติในการมองใกล้ด้วยตาข้างขวา</option><option>มีความผิดปกติในการมองใกล้ด้วยตาข้างซ้าย</option><option>มีความผิดปกติในการมองใกล้ด้วยตาทั้งสองข้าง</option><option>มีความผิดปกติในการมองไกลด้วยตาข้างขวา</option><option>มีความผิดปกติในการมองไกลด้วยตาข้างซ้าย</option><option>มีความผิดปกติในการมองไกลด้วยตาทั้งสองข้าง</option><option>มีความผิดปกติในการกะระยะ</option><option>มีตาบอดสี</option><option>มีความผิดปกติของลานสายตา</option></select></div><div class="field"><label>สรุปความเห็น</label><select id="visionSummarySelect" onchange="visionSummaryChanged()"><option>${escapeHtml(v.summary)}</option><option>สามารถปฏิบัติงานได้</option><option>มีความผิดปกติที่ควรได้รับการตรวจเพิ่มเติม แต่สามารถปฏิบัติงานได้</option><option>อาจเป็นอุปสรรคต่อการทำงาน แนะนำหลีกเลี่ยงงาน ....</option></select></div><div class="field"><label>คำแนะนำ</label><textarea>แนะนำพบจักษุแพทย์เพื่อตรวจวินิจฉัยเพิ่มเติม\nควรสวมแว่นสายตาที่มีเลนส์สายตาที่เหมาะสมในขณะปฏิบัติงาน\nควรระมัดระวัง หากต้องทำงานเกี่ยวกับการขับรถ การควบคุมเครื่องจักรที่เคลื่อนไหว หรืองานอื่น ๆ ที่ต้องใช้การกะระยะความชัดลึก\nควรระมัดระวัง หากต้องทำงานเกี่ยวกับการจำแนกสี\nแนะนำพักสายตาระหว่างการทำงาน (หลัก 20-20-20)</textarea></div></div>
+  <div id="visionAvoidBox" class="placeholder-tools hidden"><div class="field"><label>กรอกงานที่ควรหลีกเลี่ยงแทน “....”</label><input type="text" id="visionAvoidInput" placeholder="เช่น งานขับรถ งานควบคุมเครื่องจักร งานจำแนกสี"></div></div>
+  <div class="field"><label>รายละเอียดผลตรวจเพิ่มเติม</label><textarea>${escapeHtml(v.detail)}</textarea></div>
+</div></div>`;}
+function renderBiomarker(){const b=currentCase?.biomarkers||[]; if(!b.length){document.getElementById('biomarkerContainer').innerHTML='<div class="empty">คนนี้ไม่มี biomarker ที่ตรวจ จึงไม่แสดงรายการ</div>';return;} const rows=b.map(x=>`<tr class="biomarker-row ${x.interpret.includes('สูง')?'abnormal':'normal'}"><td>${escapeHtml(x.chem)}</td><td>${escapeHtml(x.name)}</td><td>${escapeHtml(x.result)}</td><td>${escapeHtml(x.ref)}</td><td>${escapeHtml(x.timing)}</td><td>${escapeHtml(x.interpret)}</td><td><textarea>ปฏิบัติตามมาตรการการใช้สารเคมีที่องค์กรกำหนดอย่างเคร่งครัด\nแนะนำสวมใส่อุปกรณ์คุ้มครองความปลอดภัยส่วนบุคคลขณะปฏิบัติงานกับสารเคมี</textarea></td></tr>`).join(''); document.getElementById('biomarkerContainer').innerHTML=`<div class="card"><div class="card-head">แสดงเฉพาะ Biomarker ที่คนนี้ตรวจ</div><div class="card-body"><table><tr><th>สารเคมี</th><th>Biomarker</th><th>ผล</th><th>ค่าอ้างอิง</th><th>เวลาเก็บ</th><th>แปลผล</th><th>คำแนะนำ</th></tr>${rows}</table></div></div>`;}
+function renderSummaryChips(){const templates=['สุขภาพไม่เป็นอุปสรรคต่อการทำงานในตำแหน่งงานของผู้รับการตรวจสุขภาพ','มีความผิดปกติที่ควรได้รับการตรวจเพิ่มเติม แต่ไม่เป็นอุปสรรคต่อการทำงาน','ไม่สามารถปฏิบัติงานได้','แนะนำหลีกเลี่ยงงาน [งานที่ควรหลีกเลี่ยง]','สามารถปฏิบัติงานได้ โดยมีข้อห้ามหรือข้อจำกัด คือ [ข้อจำกัด]','แนะนำตรวจติดตามซ้ำอีกครั้งใน [ระยะเวลา]','พิจารณา revise baseline audiogram โดยใช้ผลปี [ปี]','แนะนำพบแพทย์ผู้เชี่ยวชาญเพื่อตรวจวินิจฉัยเพิ่มเติม','ปฏิบัติตามมาตรการความปลอดภัยและใช้อุปกรณ์คุ้มครองส่วนบุคคลอย่างเหมาะสม']; document.getElementById('summaryChips').innerHTML=templates.map(t=>`<button class="template-chip" type="button" onclick="appendToSummary(fillPlaceholders('${t.replace(/'/g,"\\'")}'))">${t}</button>`).join('');}
+function fillPlaceholders(t){
+  const avoid=document.getElementById('avoidJobText')?.value || document.getElementById('visionAvoidInput')?.value || '__________';
+  const restr=document.getElementById('restrictionText')?.value || '__________';
+  const repeat=document.getElementById('repeatIntervalText')?.value || document.getElementById('hearingRepeatInterval')?.value || '__________';
+  const year=document.getElementById('reviseBaselineYear')?.value || document.getElementById('hearingBaselineYear')?.value || '__________';
+  return t.replaceAll('[งานที่ควรหลีกเลี่ยง]',avoid).replaceAll('[ข้อจำกัด]',restr).replaceAll('[ระยะเวลา]',repeat).replaceAll('[ปี]',year).replace(/\.{2,}/g,'__________');
+}
+function appendToSummary(t){const a=document.getElementById('finalSummary'); a.value+=(a.value?'\n':'')+'• '+t;}
+function buildSummary(){
+  const purposes=getChecked('purpose'), cats=getChecked('fitcat'); let lines=[];
+  if(purposes.includes('surveillance')) lines.push('ตรวจสุขภาพตามความเสี่ยงประจำปี: สุขภาพไม่เป็นอุปสรรคต่อการทำงานในตำแหน่งงานของผู้รับการตรวจสุขภาพ');
+  if(purposes.includes('fit')){
+    document.querySelectorAll('.fitConclusion').forEach(s=>{
+      let value=s.value;
+      const cat=s.dataset.cat;
+      const r=document.querySelector(`.fitRestriction[data-cat="${cat}"]`)?.value || document.getElementById('restrictionText')?.value || '';
+      if(value.includes('..........')||value.includes('....')) value=value.replace(/\.{2,}/g,r||'__________');
+      lines.push('Fit for work - '+cat+': '+value);
+    });
+    if(!cats.length) lines.push('Fit for work: สามารถปฏิบัติงานได้ โดยไม่มีข้อจำกัด');
+  }
+  const nordicCodes=document.getElementById('nordicPainLocations')?.value;
+  if(nordicCodes) lines.push('Nordic pain location code: '+nordicCodes);
+  if(document.getElementById('checkHearing').checked){lines.push('Audiogram: ให้พิจารณาผล audiogram, STS, notch และคำแนะนำด้านการป้องกันเสียงดัง'); const y=document.getElementById('hearingBaselineYear')?.value; if(y) lines.push('พิจารณา revise baseline audiogram โดยใช้ผลปี '+y);}
+  if(document.getElementById('checkLung').checked) lines.push('Spirometry: ให้พิจารณาผล spirometry และการเปลี่ยนแปลงเมื่อเทียบ baseline');
+  if(document.getElementById('checkVision').checked){ const avoid=document.getElementById('visionAvoidInput')?.value || document.getElementById('avoidJobText')?.value; lines.push('Vision screening test: ให้พิจารณาความเหมาะสมกับงานที่ต้องใช้การมองเห็น/ขับรถ/ควบคุมเครื่องจักร'+(avoid?' และแนะนำหลีกเลี่ยงงาน '+avoid:'')); }
+  document.getElementById('finalSummary').value=lines.map(x=>'• '+x).join('\n');
+}
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
