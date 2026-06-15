@@ -205,10 +205,10 @@ const CASES = {
   HN001:{hn:'HN001',name:'นายไผ่',age:'34 ปี',sex:'ชาย',dept:'RFS - ซ่อมบำรุง',job:'ช่างซ่อมบำรุง',date:today,risk:'สัมผัสเสียงดังจากเครื่องจักรและงานซ่อมบำรุง มีการใช้ ear plug เป็นครั้งคราว',purposes:['surveillance'],histories:['irritation'],exams:{hearing:true,lung:false,vision:false},fitCats:[],pe:{HEENT:['normal',''],Heart:['normal',''],Lungs:['normal',''],Abdomen:['normal',''],Skin:['normal',''],Musculoskeletal:['normal',''],Neurological:['normal','']},history:{irritation:'ไม่พบอาการระคายเคืองทางเดินหายใจ ผิวหนัง หรือดวงตาระหว่างทำงาน'},hearing:{R:{b:[10,10,10,15,20,20],m:[10,15,15,25,40,45],c:[10,10,15,25,35,40]},L:{b:[10,10,10,10,15,20],m:[10,10,10,15,20,25],c:[10,10,10,15,20,25]},interpret:'ระดับการได้ยินลดลงจากภาวะประสาทหูเสื่อม',opinion:'มีการเปลี่ยนแปลงระดับการได้ยินเมื่อเทียบกับผลการได้ยินพื้นฐานเกินเกณฑ์ที่กฎหมายกำหนด (15-dB shift)',advice:'นัดมาตรวจสมรรถภาพการได้ยินซ้ำ ภายใน 30 วัน\nแนะนำหลีกเลี่ยงการสัมผัสเสียงดัง สวม ear plug หรือ ear muff ตลอดเวลาที่สัมผัสเสียงดัง'},biomarkers:[]},
   HN002:{hn:'HN002',name:'นายเฟิร์ส',age:'42 ปี',sex:'ชาย',dept:'คลังสินค้า GPO',job:'พนักงานขับรถฟอร์กลิฟต์',date:today,risk:'งานขับรถฟอร์กลิฟต์ ต้องประเมิน fit for work ด้านการมองเห็น การได้ยิน ความดัน น้ำตาล ECG และสารเสพติด',purposes:['fit'],histories:[],exams:{hearing:true,lung:false,vision:true},fitCats:['driver'],pe:{HEENT:['normal',''],Heart:['normal',''],Lungs:['normal','']},history:{},hearing:{R:{b:[10,10,10,15,15,20],m:[10,10,10,15,20,20],c:[10,10,10,15,20,20]},L:{b:[10,10,10,15,20,20],m:[10,10,10,20,20,25],c:[10,10,10,20,20,25]},interpret:'ปกติ',opinion:'ไม่มีการเปลี่ยนแปลงระดับการได้ยินเมื่อเทียบกับผลการได้ยินพื้นฐานเกินเกณฑ์ที่กฎหมายกำหนด (15-dB shift)',advice:'ตรวจเฝ้าระวังประจำปีต่อไป อย่างน้อยปีละ 1 ครั้ง'},vision:{interpret:'ปกติ',summary:'สามารถปฏิบัติงานได้',detail:'Visual acuity with correction 20/20 both eyes, color vision ปกติ, visual field screening ปกติ, depth perception ปกติ'},driver:{history:'ไม่เคยมีประวัติลมชัก เป็นลมหมดสติ หรือใช้สารเสพติด ไม่มีการใช้ยานอนหลับประจำ โรคประจำตัวควบคุมได้ดี',bp:'128/78 mmHg',glucose:'FBS 94 mg/dL',hba1c:'HbA1c 5.5%',ecg:'ECG ปกติ',amphetamine:'ตรวจไม่พบแอมเฟตามีนในปัสสาวะ',mental:'สุขภาพจิตปกติ',result:'สามารถปฏิบัติงานขับรถฟอร์กลิฟต์ได้ ไม่มีข้อจำกัด'},biomarkers:[]},
   HN003:{hn:'HN003',name:'นางสาวจ๋า',age:'29 ปี',sex:'หญิง',dept:'โภชนาการ',job:'ผู้สัมผัสอาหาร',date:today,risk:'งานเตรียมอาหารและสัมผัสภาชนะอาหาร ตรวจ fit for work สำหรับ Food handler',purposes:['fit'],histories:[],exams:{hearing:false,lung:false,vision:false},fitCats:['food'],pe:{},history:{},food:{history:'ภายใน 1 สัปดาห์ ไม่มีคลื่นไส้อาเจียน ท้องเสีย ตัวเหลืองตาเหลือง ไข้ ไอ หรือผื่นหนอง',cxr:'ภาพถ่ายรังสีทรวงอกปกติ',hav:'Anti-HAV IgM negative',stool:'Stool examination ปกติ',culture:'Stool culture ปกติ',result:'Fit to work: สามารถทำงานสัมผัสอาหารได้'},biomarkers:[{chem:'Isopropanol',name:'Acetone in urine',result:'12 mg/L',ref:'BEI 25 mg/L; Thai BEI 50 mg/L',timing:'End of shift',interpret:'อยู่ในเกณฑ์อ้างอิง'}]},
-  HN004:{hn:'HN004',name:'นางสาวต้นน้ำ',age:'31 ปี',sex:'หญิง',dept:'ห้องปฏิบัติการเคมี',job:'นักวิทยาศาสตร์',date:today,risk:'สัมผัส Benzene และสารระคายเคืองในห้องปฏิบัติการ',purposes:['surveillance'],histories:['irritation'],exams:{hearing:false,lung:true,vision:false},fitCats:[],pe:{HEENT:['abnormal','เยื่อบุจมูกแดงเล็กน้อย'],Heart:['normal',''],Lungs:['normal','ไม่พบ wheezing'],Skin:['normal','ไม่พบ rash/eczema']},history:{irritation:'มีอาการแสบจมูกและคอแห้งหลังเลิกงานบางวัน ไม่มีหายใจเสียงวี้ด ไม่มีผื่น',special:'ประวัติพิเศษ: มีการหกของสารเคมีระดับเล็กน้อยเมื่อ 2 สัปดาห์ก่อน สวม PPE ครบ ไม่มีอาการเฉียบพลัน'},lung:{base:{fev1:2.92,fev1pct:93,fvc:3.42,fvcpct:95,ratio:85,ratioPct:98},cur:{fev1:2.76,fev1pct:88,fvc:3.35,fvcpct:93,ratio:82,ratioPct:95},interpret:'ปกติ',opinion:'ไม่มีการเปลี่ยนแปลงของสมรรถภาพปอดเมื่อเทียบกับสมรรถภาพปอดพื้นฐานอย่างมีนัยสำคัญ (15% FEV change)',advice:'ตรวจเฝ้าระวังประจำปีต่อไป อย่างน้อยปีละ 1 ครั้ง'},biomarkers:[{chem:'Benzene',name:'t,t-Muconic acid in urine',result:'380 µg/g creatinine',ref:'500 µg/g creatinine',timing:'End of shift',interpret:'อยู่ในเกณฑ์อ้างอิง'}]},
+  HN004:{hn:'HN004',name:'นางสาวต้นน้ำ',age:'31 ปี',sex:'หญิง',dept:'ห้องปฏิบัติการเคมี',job:'นักวิทยาศาสตร์',date:today,risk:'สัมผัส Benzene และสารระคายเคืองในห้องปฏิบัติการ',purposes:['surveillance','workrelated'],histories:['irritation','special'],exams:{hearing:false,lung:true,vision:false},fitCats:[],pe:{HEENT:['abnormal','เยื่อบุจมูกแดงเล็กน้อย'],Heart:['normal',''],Lungs:['normal','ไม่พบ wheezing'],Skin:['normal','ไม่พบ rash/eczema']},history:{irritation:'มีอาการแสบจมูกและคอแห้งหลังเลิกงานบางวัน ไม่มีหายใจเสียงวี้ด ไม่มีผื่น',special:'ประวัติพิเศษ: มีการหกของสารเคมีระดับเล็กน้อยเมื่อ 2 สัปดาห์ก่อน สวม PPE ครบ ไม่มีอาการเฉียบพลัน'},lung:{base:{fev1:2.92,fev1pct:93,fvc:3.42,fvcpct:95,ratio:85,ratioPct:98},cur:{fev1:2.76,fev1pct:88,fvc:3.35,fvcpct:93,ratio:82,ratioPct:95},interpret:'ปกติ',opinion:'ไม่มีการเปลี่ยนแปลงของสมรรถภาพปอดเมื่อเทียบกับสมรรถภาพปอดพื้นฐานอย่างมีนัยสำคัญ (15% FEV change)',advice:'ตรวจเฝ้าระวังประจำปีต่อไป อย่างน้อยปีละ 1 ครั้ง'},biomarkers:[{chem:'Benzene',name:'t,t-Muconic acid in urine',result:'380 µg/g creatinine',ref:'500 µg/g creatinine',timing:'End of shift',interpret:'อยู่ในเกณฑ์อ้างอิง'}]},
   HN005:{hn:'HN005',name:'นางสาวหิมะ',age:'37 ปี',sex:'หญิง',dept:'คลังเย็น',job:'พนักงานคลังสินค้าเย็น',date:today,risk:'สัมผัสความเย็นเฉพาะที่และงานยืนเดินนาน',purposes:['surveillance'],histories:['cold','msd'],exams:{hearing:false,lung:false,vision:true},fitCats:[],pe:{Heart:['normal',''],Lungs:['normal',''],Musculoskeletal:['normal',''],Skin:['normal','ปลายนิ้วมือไม่มีสีซีด/ม่วง ไม่มีแผลความเย็นกัด']},history:{cold:'รู้สึกหนาวเล็กน้อยหลังทำงานในคลังเย็น ไม่มีปลายนิ้วเปลี่ยนสี ไม่มีแผลพุพอง ไม่มีเจ็บแน่นหน้าอก',msd:'มีปวดเมื่อยหลังส่วนล่างเป็นครั้งคราวหลังยืนทำงานนาน อาการไม่รบกวนการทำงาน'},vision:{interpret:'มีความผิดปกติในการมองใกล้ด้วยตาทั้งสองข้าง',summary:'มีความผิดปกติที่ควรได้รับการตรวจเพิ่มเติม แต่สามารถปฏิบัติงานได้',detail:'Near vision ลดลงสองข้าง แนะนำประเมินแว่นสายตาเพิ่มเติม; color vision ปกติ'},biomarkers:[]},
   HN006:{hn:'HN006',name:'นางสาวบิ้ว',age:'45 ปี',sex:'หญิง',dept:'สำนักงาน',job:'เจ้าหน้าที่ธุรการ',date:today,risk:'ใช้คอมพิวเตอร์ต่อเนื่องและท่าทางการทำงานซ้ำ ๆ',purposes:['surveillance'],histories:['msd','cvs','numbness'],exams:{hearing:false,lung:false,vision:true},fitCats:[],pe:{HEENT:['normal',''],Musculoskeletal:['abnormal','กดเจ็บบริเวณ trapezius ทั้งสองข้าง ROM คอปกติ'],Neurological:['normal','motor/sensory grossly intact']},history:{msd:'ปวดคอ/บ่า/ไหล่ในช่วง 7 วันที่ผ่านมา ไม่มีชาร้าวลงแขนชัดเจน',cvs:'มีตาแห้งและล้าตาหลังใช้คอมพิวเตอร์นานเกิน 4 ชั่วโมง',numbness:'มีชามือเล็กน้อยขณะใช้ mouse นาน ๆ ไม่มีอ่อนแรง'},vision:{interpret:'มีความผิดปกติในการมองใกล้ด้วยตาข้างขวา',summary:'มีความผิดปกติที่ควรได้รับการตรวจเพิ่มเติม แต่สามารถปฏิบัติงานได้',detail:'Near vision OD ลดลงเล็กน้อย; far vision และ color vision ปกติ'},biomarkers:[]},
-  HN007:{hn:'HN007',name:'นายแก๊ป',age:'39 ปี',sex:'ชาย',dept:'งานระบบอาคาร',job:'ช่างระบบอับอากาศ',date:today,risk:'เข้าทำงานในที่อับอากาศเป็นครั้งคราว และมีการสวม respirator',purposes:['fit'],histories:[],exams:{hearing:false,lung:true,vision:false},fitCats:['confined'],pe:{},history:{special:'ไม่มีประวัติเจ็บแน่นหน้าอก เป็นลม ชัก โรคหอบหืดรุนแรง หรือ claustrophobia'},lung:{base:{fev1:3.18,fev1pct:86,fvc:4.05,fvcpct:88,ratio:78,ratioPct:92},cur:{fev1:3.05,fev1pct:82,fvc:3.96,fvcpct:86,ratio:77,ratioPct:91},interpret:'ปกติ',opinion:'ไม่มีการเปลี่ยนแปลงของสมรรถภาพปอดเมื่อเทียบกับสมรรถภาพปอดพื้นฐานอย่างมีนัยสำคัญ (15% FEV change)',advice:'สามารถติดตามประจำปี และเน้นการใช้ respirator ตามมาตรการ'},confined:{history:'ไม่มีอาการหายใจลำบาก ใจสั่น เจ็บแน่นหน้าอก เวียนศีรษะ หรือกลัวที่แคบขณะทำงาน',spo2:'SpO2 98% RA',ecg:'ECG ปกติ',cxr:'CXR ไม่มี active pulmonary lesion',resp:'ใช้ respirator ได้ ไม่มีอาการหายใจเหนื่อยผิดปกติ',result:'สามารถปฏิบัติงานในที่อับอากาศได้ โดยไม่มีข้อจำกัด'},biomarkers:[]},
+  HN007:{hn:'HN007',name:'นายแก๊ป',age:'39 ปี',sex:'ชาย',dept:'งานระบบอาคาร',job:'ช่างระบบอับอากาศ',date:today,risk:'เข้าทำงานในที่อับอากาศเป็นครั้งคราว และมีการสวม respirator',purposes:['fit'],histories:['special'],exams:{hearing:false,lung:true,vision:false},fitCats:['confined'],pe:{},history:{special:'ไม่มีประวัติเจ็บแน่นหน้าอก เป็นลม ชัก โรคหอบหืดรุนแรง หรือ claustrophobia'},lung:{base:{fev1:3.18,fev1pct:86,fvc:4.05,fvcpct:88,ratio:78,ratioPct:92},cur:{fev1:3.05,fev1pct:82,fvc:3.96,fvcpct:86,ratio:77,ratioPct:91},interpret:'ปกติ',opinion:'ไม่มีการเปลี่ยนแปลงของสมรรถภาพปอดเมื่อเทียบกับสมรรถภาพปอดพื้นฐานอย่างมีนัยสำคัญ (15% FEV change)',advice:'สามารถติดตามประจำปี และเน้นการใช้ respirator ตามมาตรการ'},confined:{history:'ไม่มีอาการหายใจลำบาก ใจสั่น เจ็บแน่นหน้าอก เวียนศีรษะ หรือกลัวที่แคบขณะทำงาน',spo2:'SpO2 98% RA',ecg:'ECG ปกติ',cxr:'CXR ไม่มี active pulmonary lesion',resp:'ใช้ respirator ได้ ไม่มีอาการหายใจเหนื่อยผิดปกติ',result:'สามารถปฏิบัติงานในที่อับอากาศได้ โดยไม่มีข้อจำกัด'},biomarkers:[]},
   HN008:{hn:'HN008',name:'นางสาวซัน',age:'50 ปี',sex:'หญิง',dept:'ห้องเครื่องมือแพทย์',job:'เจ้าหน้าที่จัดการเครื่องมือ',date:today,risk:'สัมผัสโลหะหนักบางชนิดในกระบวนการซ่อม/ทำความสะอาดอุปกรณ์',purposes:['surveillance'],histories:['irritation'],exams:{hearing:true,lung:false,vision:false},fitCats:[],pe:{HEENT:['normal',''],Heart:['normal',''],Lungs:['normal',''],Skin:['normal','']},history:{irritation:'ไม่พบอาการระคายเคืองทางเดินหายใจ ผิวหนัง หรือดวงตา'},hearing:{R:{b:[15,15,15,20,25,30],m:[15,15,15,20,30,35],c:[15,15,15,20,30,35]},L:{b:[15,15,15,20,25,30],m:[15,15,15,20,25,35],c:[15,15,15,20,25,35]},interpret:'ปกติ',opinion:'ไม่มีการเปลี่ยนแปลงระดับการได้ยินเมื่อเทียบกับผลการได้ยินพื้นฐานเกินเกณฑ์ที่กฎหมายกำหนด (15-dB shift)',advice:'ตรวจเฝ้าระวังประจำปีต่อไป อย่างน้อยปีละ 1 ครั้ง'},biomarkers:[{chem:'Lead',name:'Lead in blood',result:'110 µg/L',ref:'BEI 200 µg/L; Thai BEI 300 µg/L',timing:'Not critical',interpret:'อยู่ในเกณฑ์อ้างอิง'},{chem:'Cadmium',name:'Cadmium in urine',result:'6.2 µg/g creatinine',ref:'5 µg/g creatinine',timing:'Not critical',interpret:'สูงกว่าเกณฑ์อ้างอิง'}]}
 };
 
@@ -493,7 +493,118 @@ function drawAudiogram(){
   series.forEach(s=>{const data=getAud(s.ear,s.type); ctx.setLineDash(s.dash); ctx.strokeStyle=s.shade; ctx.lineWidth=2; ctx.beginPath(); let first=true; freqs.forEach(f=>{if(data[f]===undefined||data[f]===null||isNaN(data[f]))return; const xx=x(f),yy=y(data[f]); if(first){ctx.moveTo(xx,yy);first=false;}else ctx.lineTo(xx,yy);}); ctx.stroke(); ctx.setLineDash([]); freqs.forEach(f=>{const val=data[f]; if(val===undefined||val===null||isNaN(val))return; const xx=x(f),yy=y(val); ctx.strokeStyle=s.shade; ctx.fillStyle='#fff'; ctx.lineWidth=2; if(s.shape==='O'){ctx.beginPath();ctx.arc(xx,yy,5,0,Math.PI*2);ctx.fill();ctx.stroke();}else{ctx.beginPath();ctx.moveTo(xx-5,yy-5);ctx.lineTo(xx+5,yy+5);ctx.moveTo(xx+5,yy-5);ctx.lineTo(xx-5,yy+5);ctx.stroke();}});});
   ctx.font='12px Tahoma, Arial'; let ly=18; series.forEach((s,i)=>{const lx=520+(i%2)*115; if(i%2===0 && i>0) ly+=18; ctx.strokeStyle=s.shade; ctx.setLineDash(s.dash); ctx.beginPath(); ctx.moveTo(lx,ly-4); ctx.lineTo(lx+24,ly-4); ctx.stroke(); ctx.setLineDash([]); ctx.fillStyle='#333'; ctx.fillText(s.label,lx+30,ly);});
 }
-function renderLung(){const l=currentCase?.lung||{base:{fev1:'',fev1pct:'',fvc:'',fvcpct:'',ratio:'',ratioPct:''},cur:{fev1:'',fev1pct:'',fvc:'',fvcpct:'',ratio:'',ratioPct:''},interpret:'ปกติ',opinion:'',advice:''}; const rows=[['FEV1','fev1','L'],['FVC','fvc','L'],['FEV1/FVC','ratio','%']].map(r=>lungRow(r[0],r[1],r[2],l)).join('');return `<div class="card"><div class="card-head">การตรวจพิเศษทางอาชีวอนามัย: Spirometry · เทียบ Baseline</div><div class="card-body"><table class="lung-table"><tr><th>Parameter</th><th>Baseline value</th><th>Baseline % predicted</th><th>Current value</th><th>Current % predicted</th><th>Δ value</th><th>Δ % from baseline value</th></tr>${rows}</table><button class="btn secondary" type="button" onclick="calcLung()">คำนวณ Lung change</button><div id="lungCalc" class="audio-result"></div><div class="grid3"><div class="field"><label>แปลผล</label><select><option>${escapeHtml(l.interpret||'ปกติ')}</option><option>ไม่สามารถแปลผลการตรวจได้</option><option>ปกติ</option><option>พบการอุดกั้นของหลอดลม ระดับน้อย</option><option>พบการอุดกั้นของหลอดลม ระดับปานกลาง</option><option>พบการจำกัดการขยายตัวของหลอดลม ระดับ ..........</option><option>พบการอุดกั้นและจำกัดการขยายตัวของหลอดลม</option></select></div><div class="field"><label>สรุปเทียบ baseline</label><select><option>${escapeHtml(l.opinion||'ไม่มีการเปลี่ยนแปลงของสมรรถภาพปอดเมื่อเทียบกับสมรรถภาพปอดพื้นฐานอย่างมีนัยสำคัญ (15% FEV change)')}</option><option>มีการเปลี่ยนแปลงของสมรรถภาพปอดเมื่อเทียบกับสมรรถภาพปอดพื้นฐานอย่างมีนัยสำคัญ (15% FEV change)</option><option>ไม่มีการเปลี่ยนแปลงของสมรรถภาพปอดเมื่อเทียบกับสมรรถภาพปอดพื้นฐานอย่างมีนัยสำคัญ (15% FEV change)</option></select></div><div class="field"><label>คำแนะนำ</label><textarea>${escapeHtml(l.advice||'ตรวจเฝ้าระวังประจำปีต่อไป อย่างน้อยปีละ 1 ครั้ง')}</textarea></div></div></div></div>`;}
+function renderLung(){
+  const l=currentCase?.lung||{
+    base:{fev1:'',fev1pct:'',fvc:'',fvcpct:'',ratio:'',ratioPct:''},
+    cur:{fev1:'',fev1pct:'',fvc:'',fvcpct:'',ratio:'',ratioPct:''},
+    interpret:'ปกติ',opinion:'',advice:''
+  };
+  const rows=[['FEV1','fev1','L'],['FVC','fvc','L'],['FEV1/FVC','ratio','%']].map(r=>lungRow(r[0],r[1],r[2],l)).join('');
+  const parsed=parseLungInterpret(l.interpret||'ปกติ');
+
+  setTimeout(updateLungAbnormalOptions,0);
+
+  return `<div class="card"><div class="card-head">การตรวจพิเศษทางอาชีวอนามัย: Spirometry · เทียบ Baseline</div><div class="card-body">
+    <table class="lung-table">
+      <tr><th>Parameter</th><th>Baseline value</th><th>Baseline % predicted</th><th>Current value</th><th>Current % predicted</th><th>Δ value</th><th>Δ % from baseline value</th></tr>${rows}
+    </table>
+    <button class="btn secondary" type="button" onclick="calcLung()">คำนวณ Lung change</button>
+    <div id="lungCalc" class="audio-result"></div>
+
+    <div class="grid3">
+      <div class="field">
+        <label>ผลการแปลผล Spirometry</label>
+        <select id="lungResultStatus" onchange="updateLungAbnormalOptions()">
+          <option value="normal" ${parsed.status==='normal'?'selected':''}>ปกติ</option>
+          <option value="uninterpretable" ${parsed.status==='uninterpretable'?'selected':''}>แปลผลไม่ได้</option>
+          <option value="abnormal" ${parsed.status==='abnormal'?'selected':''}>ผิดปกติ</option>
+        </select>
+      </div>
+
+      <div class="field lung-abnormal-field">
+        <label>ชนิดของความผิดปกติ</label>
+        <select id="lungAbnormalType" onchange="updateLungFinalInterpretation()">
+          <option value="Obstructive" ${parsed.type==='Obstructive'?'selected':''}>Obstructive</option>
+          <option value="Restrictive" ${parsed.type==='Restrictive'?'selected':''}>Restrictive</option>
+          <option value="Mix" ${parsed.type==='Mix'?'selected':''}>Mix</option>
+        </select>
+      </div>
+
+      <div class="field lung-abnormal-field">
+        <label>Level</label>
+        <select id="lungAbnormalLevel" onchange="updateLungFinalInterpretation()">
+          <option value="Mild" ${parsed.level==='Mild'?'selected':''}>Mild</option>
+          <option value="Moderate" ${parsed.level==='Moderate'?'selected':''}>Moderate</option>
+          <option value="Severe" ${parsed.level==='Severe'?'selected':''}>Severe</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="grid3">
+      <div class="field">
+        <label>ข้อความแปลผลสุดท้าย</label>
+        <input type="text" id="lungFinalInterpretation" value="${escapeHtml(formatLungInterpret(parsed))}" readonly>
+      </div>
+      <div class="field">
+        <label>สรุปเทียบ baseline</label>
+        <select id="lungBaselineOpinion">
+          <option ${sel(l.opinion,'ไม่มีการเปลี่ยนแปลงของสมรรถภาพปอดเมื่อเทียบกับสมรรถภาพปอดพื้นฐานอย่างมีนัยสำคัญ')}>ไม่มีการเปลี่ยนแปลงของสมรรถภาพปอดเมื่อเทียบกับสมรรถภาพปอดพื้นฐานอย่างมีนัยสำคัญ (15% FEV change)</option>
+          <option ${sel(l.opinion,'มีการเปลี่ยนแปลงของสมรรถภาพปอดเมื่อเทียบกับสมรรถภาพปอดพื้นฐานอย่างมีนัยสำคัญ')}>มีการเปลี่ยนแปลงของสมรรถภาพปอดเมื่อเทียบกับสมรรถภาพปอดพื้นฐานอย่างมีนัยสำคัญ (15% FEV change)</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>คำแนะนำ</label>
+        <textarea id="lungAdvice">${escapeHtml(l.advice||'ตรวจเฝ้าระวังประจำปีต่อไป อย่างน้อยปีละ 1 ครั้ง')}</textarea>
+      </div>
+    </div>
+  </div></div>`;
+}
+
+function parseLungInterpret(text){
+  const t=(text||'').toString();
+  let out={status:'normal',type:'Obstructive',level:'Mild'};
+
+  if(t.includes('ไม่สามารถแปลผล') || t.includes('แปลผลไม่ได้')){
+    out.status='uninterpretable';
+    return out;
+  }
+  if(t.includes('ผิดปกติ') || t.includes('อุดกั้น') || t.includes('จำกัด') || t.includes('Obstructive') || t.includes('Restrictive') || t.includes('Mix')){
+    out.status='abnormal';
+  }
+
+  if(t.includes('Restrictive') || t.includes('จำกัด')) out.type='Restrictive';
+  if(t.includes('Mix') || t.includes('อุดกั้นและจำกัด')) out.type='Mix';
+  if(t.includes('Obstructive') || t.includes('อุดกั้น')) out.type='Obstructive';
+
+  if(t.toLowerCase().includes('moderate') || t.includes('ปานกลาง')) out.level='Moderate';
+  if(t.toLowerCase().includes('severe') || t.includes('รุนแรง')) out.level='Severe';
+  if(t.toLowerCase().includes('mild') || t.includes('น้อย')) out.level='Mild';
+
+  return out;
+}
+
+function formatLungInterpret(parsed){
+  if(parsed.status==='normal') return 'ปกติ';
+  if(parsed.status==='uninterpretable') return 'แปลผลไม่ได้';
+  return `ผิดปกติ: ${parsed.type} pattern, ${parsed.level} level`;
+}
+
+function updateLungAbnormalOptions(){
+  const status=document.getElementById('lungResultStatus')?.value || 'normal';
+  const show=status==='abnormal';
+  document.querySelectorAll('.lung-abnormal-field').forEach(el=>el.classList.toggle('hidden', !show));
+  updateLungFinalInterpretation();
+}
+
+function updateLungFinalInterpretation(){
+  const status=document.getElementById('lungResultStatus')?.value || 'normal';
+  const type=document.getElementById('lungAbnormalType')?.value || 'Obstructive';
+  const level=document.getElementById('lungAbnormalLevel')?.value || 'Mild';
+  const finalText=formatLungInterpret({status,type,level});
+  const finalInput=document.getElementById('lungFinalInterpretation');
+  if(finalInput) finalInput.value=finalText;
+}
+
 function lungRow(label,key,unit,l){return `<tr><td>${label}</td><td><input class="lung" data-k="${key}" data-t="base" type="number" step="0.01" value="${l.base?.[key]??''}"> ${unit}</td><td><input class="lung" data-k="${key}" data-t="basepct" type="number" step="1" value="${l.base?.[key+'pct']??l.base?.[key+'Pct']??''}"> %</td><td><input class="lung" data-k="${key}" data-t="cur" type="number" step="0.01" value="${l.cur?.[key]??''}"> ${unit}</td><td><input class="lung" data-k="${key}" data-t="curpct" type="number" step="1" value="${l.cur?.[key+'pct']??l.cur?.[key+'Pct']??''}"> %</td><td class="num" id="d_${key}"></td><td class="num" id="dp_${key}"></td></tr>`;}
 function lungVal(k,t){const el=document.querySelector(`.lung[data-k="${k}"][data-t="${t}"]`); return Number(el?.value||0);}
 function calcLung(){['fev1','fvc','ratio'].forEach(k=>{const b=lungVal(k,'base'),c=lungVal(k,'cur'); const d=c-b; const p=b?d/b*100:0; const el=document.getElementById('d_'+k), ep=document.getElementById('dp_'+k); if(el)el.textContent=d.toFixed(2); if(ep)ep.innerHTML=(p<=-15?`<span class="pill bad">${p.toFixed(1)}%</span>`:`${p.toFixed(1)}%`);}); const fev1p=lungVal('fev1','curpct'); const severity=fev1p>=70?'mild/normal range by FEV1 %pred':fev1p>=60?'moderate':fev1p>=50?'moderately severe':fev1p>=35?'severe':'very severe'; if(document.getElementById('lungCalc'))document.getElementById('lungCalc').innerHTML=`FEV1 % predicted ปัจจุบัน = <b>${fev1p||'-'}%</b>; severity guide = <b>${severity}</b>; หาก FEV1 value ลดลง ≥15% จาก baseline ให้พิจารณาว่ามี significant FEV change`;
