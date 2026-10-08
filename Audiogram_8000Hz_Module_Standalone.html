@@ -1,0 +1,242 @@
+<!doctype html><html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Audiogram 8kHz · Standalone Module</title><style>
+*{box-sizing:border-box}body{margin:0;background:#f6f7f9;color:#202124;font-family:Tahoma,Arial,sans-serif;font-size:14px;line-height:1.5}
+main{max-width:1300px;margin:30px auto;padding:0 20px}h1{font-size:22px;margin:0 0 5px}.mini{font-size:12px;color:#666}
+.card{border:1px solid #ddd;border-radius:12px;background:#fff;box-shadow:0 1px 4px #0001;margin-bottom:14px;overflow:hidden}
+.card-head{background:#fafafa;border-bottom:1px solid #ddd;padding:12px 14px;font-weight:800}.card-body{padding:14px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.field{margin-bottom:10px}.field label{display:block;font-size:13px;font-weight:700;margin-bottom:5px}
+input[type=number],input[type=text],textarea,select{width:100%;border:1px solid #ccc;border-radius:7px;padding:8px;font-family:inherit}
+textarea{min-height:88px}.btn{border-radius:8px;border:1px solid #888;padding:9px 15px;cursor:pointer;background:#fff;font-weight:700}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.hint{padding:11px;background:#fafafa;border:1px dashed #bbb;border-radius:10px;color:#555;font-size:12px;margin-bottom:10px}
+table{border-collapse:collapse;width:100%;margin:8px 0}td,th{border:1px solid #ddd;padding:7px 8px;vertical-align:top}th{background:#f4f4f4}.audio-result{background:#fafafa;border:1px solid #ddd;border-radius:9px;padding:10px;margin-top:10px}
+.audiogram-wrap{background:#fff;border:1px solid #ddd;border-radius:9px;padding:10px;text-align:center;margin-top:10px}
+canvas{max-width:100%;height:auto}.graph-note{font-size:11px;color:#666;text-align:left}.placeholder-tools{background:#fafafa;border:1px dashed #ccc;border-radius:9px;padding:12px}
+.right-ear{border-left:4px solid #555}.left-ear{border-left:4px solid #aaa}
+@media(max-width:980px){.grid3{grid-template-columns:1fr}}
+
+    /* Audiogram v2: exclusively scoped to the hearing module */
+    .audio-ears-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+    .audio-scroll{width:100%;overflow-x:auto}
+    .audio-table{min-width:380px}
+    .audio-table th,.audio-table td{text-align:center;padding:6px 5px}
+    .audio-table input{width:100%;min-width:66px;max-width:100px;text-align:center}
+    .audio-calc-table{min-width:920px}
+    .audio-calc-table th,.audio-calc-table td{vertical-align:top}
+    .audio-calc-table td{line-height:1.65}
+    .audio-badge{display:inline-block;padding:1px 7px;border-radius:99px;border:1px solid #ccc;font-size:12px}
+    .audio-badge.pos{color:#8a1f1f;border-color:#d9aaaa;background:#fff5f5}
+    .audio-badge.neg{color:#1f6b42;border-color:#b7d3c2;background:#f8fff9}
+    .audio-badge.pending{color:#815600;border-color:#dec487;background:#fffaf0}
+    .audio-badge.na{color:#555;border-color:#bbb;background:#f7f7f7}
+    .audio-criteria{margin:12px 0 0;padding:10px;border:1px solid #ddd;border-radius:9px;background:#fff}
+    .audio-criteria summary{cursor:pointer;font-weight:700}
+    .audio-criteria li{margin-bottom:5px}
+    .audio-criteria p{margin:6px 0}
+    .audio-note{font-size:12px;color:#5c4a18;background:#fffdf4;border:1px solid #e4d4a0;border-radius:8px;padding:9px;margin:9px 0}
+    @media(max-width:980px){.audio-ears-grid{grid-template-columns:1fr}}
+</style></head><body><main><h1>Audiogram Calculation Module</h1><p class="mini">Standalone HTML สำหรับทีม IT · ทดลองแก้ไขค่าการตรวจได้ทั้งสองหู แล้วกดคำนวณเพื่อดูผล Coles / Wilson / NIOSH / OSHA และกราฟ</p><div id="standaloneRoot"></div></main><script>
+const freqs=[500,1000,2000,3000,4000,6000,8000];
+const currentCase={hearing:{R:{b:[10,10,10,15,20,20,20],m:[10,15,15,25,40,45,25],c:[10,10,15,25,35,40,25]},L:{b:[10,10,10,10,15,20,25],m:[10,10,10,15,20,25,25],c:[10,10,10,15,20,25,25]},interpret:'รอแพทย์ประเมิน',opinion:'รอแพทย์สรุป',advice:''}};
+function escapeHtml(s){return (s??'').toString().replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));}
+function renderHearing(){
+  const h=currentCase?.hearing||emptyHearing();
+  return `<div class="card" id="hearingModule">
+    <div class="card-head">การตรวจพิเศษทางอาชีวอนามัย: Audiogram · Baseline / Monitoring / Confirmation</div>
+    <div class="card-body">
+      <div class="hint">บันทึกค่าการได้ยินแยกหูที่ 500, 1,000, 2,000, 3,000, 4,000, 6,000 และ <b>8,000 Hz</b> (dB HL) · ระบบคำนวณจาก <b>Monitoring</b> เมื่อเทียบ Baseline; ตรวจ Notch บน <b>Monitoring</b> · ช่องว่างหมายถึงยังไม่มีผลตรวจ ไม่ใช่ 0 dB HL</div>
+      <div class="audio-ears-grid">${audioEar('R','หูขวา (Right)',h.R)}${audioEar('L','หูซ้าย (Left)',h.L)}</div>
+      <div class="row" style="margin-top:10px"><button class="btn secondary" type="button" onclick="calcAudio()">คำนวณ Audiogram</button><span class="mini">เมื่อแก้ค่าตรวจ ผลและกราฟจะอัปเดตอัตโนมัติ</span></div>
+      <div id="audioCalc" class="audio-result" aria-live="polite"></div>
+      <div class="audiogram-wrap">
+        <canvas id="audiogramCanvas" width="840" height="480" role="img" aria-label="Audiogram แยกหูขวาและหูซ้าย แสดง Baseline Monitoring Confirmation จนถึง 8000 Hz"></canvas>
+        <div class="graph-note">กราฟ Audiogram: dB HL มากขึ้นแสดงต่ำลง · O = หูขวา · X = หูซ้าย · สีและชนิดเส้นแยก Baseline, Monitoring, Confirmation · เฉพาะ Monitoring ที่ผ่าน Coles/Wilson จะมีวงเน้นจุด Notch</div>
+      </div>
+      <details class="audio-criteria"><summary>ดูสูตร / ข้อกำหนดที่ใช้คำนวณ</summary>
+        <ul>
+          <li><b>Coles (Coles–Lutman–Buffin):</b> ค่าที่ 3/4/6 kHz ต้องสูงกว่าเกณฑ์อ้างอิงต่ำ 1 หรือ 2 kHz <b>และ</b> สูงกว่าความถี่อ้างอิงสูงที่อยู่ถัดไป 6 หรือ 8 kHz อย่างน้อย 10 dB HL ทั้งสองด้าน (ที่ 6 kHz ใช้ 8 kHz เป็นขอบด้านสูง) โดย implementation นี้เลือกจุดอ้างอิงที่เข้าเงื่อนไขจากกลุ่ม “หรือ”</li>
+          <li><b>Wilson:</b> ค่าที่ 3/4/6 kHz สูงกว่าค่าที่ <b>2 kHz และ 8 kHz</b> อย่างน้อย 10 dB HL ทั้งคู่</li>
+          <li><b>OSHA STS:</b> ค่าเฉลี่ยผลต่าง Monitoring − Baseline ที่ 2, 3, 4 kHz ≥10 dB แยกหู; <b>ยังไม่ทำ age correction</b> และไม่ใช่ OSHA recordability determination</li>
+          <li><b>NIOSH 15-dB TWICE:</b> Monitoring แย่ลง ≥15 dB ที่ความถี่ใดความถี่หนึ่งในช่วง 500–6,000 Hz และ Confirmation ยังแย่ลง ≥15 dB ที่หูและความถี่เดิมเมื่อเทียบ Baseline จึงแสดง “ยืนยัน”</li>
+          <li><b>AAO-HNS:</b> แสดงการเปลี่ยนของค่าเฉลี่ย Low (500/1,000/2,000 Hz) และ High (3,000/4,000/6,000 Hz) เชิงพรรณนา ไม่ใช่ผลวินิจฉัยอัตโนมัติ</li>
+        </ul>
+        <p class="mini">แหล่งอ้างอิง: <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC5484347/" target="_blank" rel="noopener">Lie et al., Laryngoscope 2017 (Coles/Wilson)</a> · <a href="https://www.som.org.uk/sites/som.org.uk/files/Interpreting_an_Audiogram_for_Indications_of_Occupational_NIHL_Apr_24.pdf" target="_blank" rel="noopener">Society of Occupational Medicine 2024</a> · <a href="https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.95" target="_blank" rel="noopener">OSHA 29 CFR 1910.95</a> · <a href="https://www.cdc.gov/niosh/docs/98-126/pdfs/criteriadoc_98-126.pdf" target="_blank" rel="noopener">NIOSH Criteria Document 1998</a></p>
+      </details>
+      <div class="audio-note">ผล Notch เป็นการจำแนกลักษณะกราฟ ไม่สามารถยืนยัน Noise-Induced Hearing Loss (NIHL) ได้จาก Notch เพียงอย่างเดียว ต้องพิจารณาประวัติสัมผัสเสียง โรคหูอื่น อายุ คุณภาพการตรวจ และแพทย์เป็นผู้ยืนยันผล</div>
+      <div class="grid3" style="margin-top:10px">
+        <div class="field"><label>การแปลผลทางคลินิก (แพทย์เลือก)</label><select><option>${escapeHtml(h.interpret||'ยังไม่แปลผล')}</option><option>ปกติ</option><option>ระดับการได้ยินลดลงจากภาวะการนำเสียงผิดปกติ</option><option>ระดับการได้ยินลดลงจากภาวะประสาทหูเสื่อม</option><option>ระดับการได้ยินลดลงจากภาวะการนำเสียงผิดปกติและภาวะประสาทหูเสื่อม</option></select></div>
+        <div class="field"><label>สรุปเทียบ Baseline (แพทย์เลือก)</label><select><option>${escapeHtml(h.opinion||'ยังไม่สรุปผล')}</option><option>พบการเปลี่ยนแปลงการได้ยินเมื่อเทียบกับ Baseline</option><option>ไม่พบการเปลี่ยนแปลงการได้ยินตามเกณฑ์ที่เลือก</option></select></div>
+        <div class="field"><label>คำแนะนำ</label><textarea>${escapeHtml(h.advice||'ตรวจเฝ้าระวังประจำปีตามความเสี่ยง')}</textarea></div>
+      </div>
+      <div class="placeholder-tools"><div class="grid3">
+        <div class="field"><label>Revise baseline audiogram โดยใช้ผลปี</label><input type="text" id="hearingBaselineYear" placeholder="เช่น 2568"></div>
+        <div class="field"><label>นัดตรวจซ้ำภายใน</label><input type="text" id="hearingRepeatInterval" placeholder="เช่น 30 วัน"></div>
+        <div class="field"><label>หมายเหตุเพิ่มเติม</label><input type="text" id="hearingExtraNote" placeholder="ระบุเพิ่มเติม"></div>
+      </div></div>
+    </div>
+  </div>`;
+}
+
+function emptyHearing(){
+  const empty=()=>Array(freqs.length).fill(null);
+  return {R:{b:empty(),m:empty(),c:empty()},L:{b:empty(),m:empty(),c:empty()}};
+}
+function audioEar(ear,label,data){
+  const types=['b','m','c'];
+  const rows=freqs.map((f,i)=>`<tr>
+    <td><b>${f.toLocaleString('en-US')}</b></td>
+    ${types.map(type=>{
+      const raw=data?.[type]?.[i];
+      const value=raw===null||raw===undefined?'':raw;
+      return `<td><input class="aud" aria-label="${label} ${f} Hz ${type}" data-ear="${ear}" data-type="${type}" data-f="${f}" type="number" min="-20" max="120" step="5" value="${escapeHtml(value)}" oninput="calcAudio()"></td>`;
+    }).join('')}
+  </tr>`).join('');
+  return `<div class="card ${ear==='R'?'right-ear':'left-ear'}" style="box-shadow:none;min-width:0"><div class="card-head">${label}</div><div class="card-body"><div class="audio-scroll"><table class="audio-table"><thead><tr><th>Hz</th><th>Baseline</th><th>Monitoring</th><th>Confirmation</th></tr></thead><tbody>${rows}</tbody></table></div></div></div>`;
+}
+
+// Never turn an unfilled frequency into 0 dB HL.
+function getAud(ear,type){
+  const o={};
+  document.querySelectorAll(`.aud[data-ear="${ear}"][data-type="${type}"]`).forEach(el=>{
+    const s=el.value.trim(); const n=s===''?null:Number(s);
+    o[Number(el.dataset.f)]=(n===null||!Number.isFinite(n)||n < -20||n > 120)?null:n;
+  });
+  return o;
+}
+function audioHas(o,needed){return needed.every(f=>o[f]!==null&&o[f]!==undefined&&Number.isFinite(o[f]));}
+function audioAvg(o,needed){return audioHas(o,needed)?needed.reduce((s,f)=>s+o[f],0)/needed.length:null;}
+function audioDelta(m,b,f){return audioHas(m,[f])&&audioHas(b,[f])?m[f]-b[f]:null;}
+function audioFmt(v){return v===null||v===undefined||!Number.isFinite(v)?'—':v.toFixed(1)+' dB';}
+function audioBadge(label,kind){return `<span class="audio-badge ${kind}">${label}</span>`;}
+
+// Coles, Lutman & Buffin (2000), operationalised from Lie et al. (2017):
+// notch at 3/4/6k at least 10 dB worse than a lower (1 OR 2k) and
+// an upper (6 OR 8k) anchor. An upper anchor must have higher frequency
+// than the candidate: at 6k the only possible upper anchor is 8k.
+// Both Coles and Wilson are strictly non-evaluable if data are incomplete.
+function notch(o){
+  const needed=[1000,2000,3000,4000,6000,8000];
+  if(!audioHas(o,needed))return {status:'incomplete',missing:needed.filter(f=>!audioHas(o,[f])),coles:[],wilson:[]};
+  const coles=[],wilson=[];
+  for(const f of [3000,4000,6000]){
+    const lowAnchors=[1000,2000].map(freq=>({freq,depth:o[f]-o[freq]}));
+    const upperAnchors=[6000,8000].filter(freq=>freq>f).map(freq=>({freq,depth:o[f]-o[freq]}));
+    // 'or': take the eligible anchor providing the greater notch contrast.
+    const bestLow=lowAnchors.sort((a,b)=>b.depth-a.depth)[0];
+    const bestHigh=upperAnchors.sort((a,b)=>b.depth-a.depth)[0];
+    if(bestLow.depth>=10&&bestHigh?.depth>=10)
+      coles.push({f,lowRef:bestLow.freq,upperRef:bestHigh.freq,lowDepth:bestLow.depth,upperDepth:bestHigh.depth});
+    const d2=o[f]-o[2000],d8=o[f]-o[8000];
+    if(d2>=10&&d8>=10)wilson.push({f,lowDepth:d2,upperDepth:d8});
+  }
+  return {status:'complete',missing:[],coles,wilson};
+}
+
+function evalEar(ear){
+  const b=getAud(ear,'b'),m=getAud(ear,'m'),c=getAud(ear,'c');
+  const neededShift=[500,1000,2000,3000,4000,6000];
+  const shiftComplete=audioHas(b,neededShift)&&audioHas(m,neededShift);
+  const shifts=neededShift.map(f=>({f,mon:audioDelta(m,b,f),conf:audioDelta(c,b,f)}));
+  let niosh={status:'incomplete',freqs:[],confirmed:[]};
+  if(shiftComplete){
+    const flagged=shifts.filter(x=>x.mon>=15).map(x=>x.f);
+    if(!flagged.length)niosh={status:'negative',freqs:[],confirmed:[]};
+    else {
+      const confirmed=flagged.filter(f=>audioDelta(c,b,f)!==null&&audioDelta(c,b,f)>=15);
+      const missingRetest=flagged.filter(f=>audioDelta(c,b,f)===null);
+      const status=confirmed.length?'confirmed':missingRetest.length?'pending':'not_confirmed';
+      niosh={status,freqs:flagged,confirmed,missingRetest};
+    }
+  }
+  const oshaRequired=[2000,3000,4000];
+  const osha=audioHas(b,oshaRequired)&&audioHas(m,oshaRequired)
+    ?audioAvg(m,oshaRequired)-audioAvg(b,oshaRequired):null;
+  const low=[500,1000,2000],high=[3000,4000,6000];
+  const aaoLow=audioHas(b,low)&&audioHas(m,low)?audioAvg(m,low)-audioAvg(b,low):null;
+  const aaoHigh=audioHas(b,high)&&audioHas(m,high)?audioAvg(m,high)-audioAvg(b,high):null;
+  return {ear,b,m,c,shifts,niosh,osha,aaoLow,aaoHigh,notch:notch(m)};
+}
+function audioNioshText(n){
+  if(n.status==='incomplete')return audioBadge('ข้อมูลไม่ครบ','na');
+  if(n.status==='negative')return audioBadge('ไม่พบ shift ≥15 dB','neg');
+  if(n.status==='confirmed')return audioBadge('ยืนยันแล้ว','pos')+`<div>Monitoring: ${n.freqs.join(', ')} Hz<br>Confirmation: ${n.confirmed.join(', ')} Hz</div>`;
+  if(n.status==='pending')return audioBadge('รอยืนยัน','pending')+`<div>Monitoring: ${n.freqs.join(', ')} Hz<br>ยังไม่มีผล Confirmation ครบ</div>`;
+  return audioBadge('ตรวจซ้ำไม่ยืนยัน','pending')+`<div>Monitoring: ${n.freqs.join(', ')} Hz</div>`;
+}
+function audioNotchText(n){
+  if(n.status==='incomplete')return audioBadge('ข้อมูลไม่ครบ','na')+`<div class="mini">ต้องกรอก ${n.missing.join(', ')} Hz</div>`;
+  const coles=n.coles.length?audioBadge('พบ','pos')+' '+n.coles.map(x=>`${x.f} Hz (ต่างจาก ${x.lowRef} Hz = ${x.lowDepth} dB; ต่างจาก ${x.upperRef} Hz = ${x.upperDepth} dB)`).join('; '):audioBadge('ไม่พบ','neg');
+  const wilson=n.wilson.length?audioBadge('พบ','pos')+' '+n.wilson.map(x=>`${x.f} Hz (เทียบ 2k +${x.lowDepth}, 8k +${x.upperDepth} dB)`).join('; '):audioBadge('ไม่พบ','neg');
+  return `<div><b>Coles:</b> ${coles}</div><div><b>Wilson:</b> ${wilson}</div>`;
+}
+function calcAudio(){
+  if(!document.getElementById('audioCalc'))return;
+  const R=evalEar('R'),L=evalEar('L');
+  const row=e=>`<tr>
+    <td><b>${e.ear==='R'?'ขวา (R)':'ซ้าย (L)'}</b></td>
+    <td>${audioNioshText(e.niosh)}</td>
+    <td>${e.osha===null?audioBadge('ข้อมูลไม่ครบ','na'):`${audioFmt(e.osha)}<div>${audioBadge(e.osha>=10?'OSHA STS ≥10':'ไม่ถึงเกณฑ์ STS',e.osha>=10?'pos':'neg')}</div>`}</td>
+    <td>Low: ${audioFmt(e.aaoLow)}<br>High: ${audioFmt(e.aaoHigh)}</td>
+    <td>${audioNotchText(e.notch)}</td>
+  </tr>`;
+  document.getElementById('audioCalc').innerHTML=`<b>ผลคำนวณ Audiogram (แยกหู)</b><div class="audio-scroll"><table class="audio-calc-table"><thead><tr><th>หู</th><th>NIOSH 15-dB TWICE</th><th>OSHA avg shift</th><th>AAO-HNS (descriptive)</th><th>Notching: Coles / Wilson</th></tr></thead><tbody>${row(R)}${row(L)}</tbody></table></div><div class="mini">ผล Shift = Monitoring − Baseline · ผล Notch ใช้ Monitoring · 8,000 Hz ใช้ตรวจ Notch แต่ไม่ใช้คำนวณ OSHA STS หรือ NIOSH 15-dB shift</div>`;
+  drawAudiogram(R,L);
+}
+
+function drawAudiogram(R=evalEar('R'),L=evalEar('L')){
+  const canvas=document.getElementById('audiogramCanvas'); if(!canvas)return;
+  const ctx=canvas.getContext('2d'); if(!ctx)return;
+  const w=canvas.width,h=canvas.height,padL=60,padR=23,padT=62,padB=48;
+  const pw=w-padL-padR,ph=h-padT-padB;
+  const minDb=-20,maxDb=120;
+  const x=f=>padL+(Math.log2(f/500)/Math.log2(8000/500))*pw;
+  const y=v=>padT+(v-minDb)/(maxDb-minDb)*ph;
+  ctx.clearRect(0,0,w,h);ctx.fillStyle='#fff';ctx.fillRect(0,0,w,h);
+  // Highlight notch candidates of either definition on the Monitoring result.
+  const notchF=new Set([...R.notch.coles,...R.notch.wilson,...L.notch.coles,...L.notch.wilson].map(v=>v.f));
+  notchF.forEach(f=>{ctx.fillStyle='#fff8e3';ctx.fillRect(x(f)-15,padT,30,ph);});
+  ctx.strokeStyle='#e7e7e7';ctx.lineWidth=1;ctx.beginPath();
+  freqs.forEach(f=>{ctx.moveTo(x(f),padT);ctx.lineTo(x(f),padT+ph);});
+  for(let db=-20;db<=120;db+=10){ctx.moveTo(padL,y(db));ctx.lineTo(padL+pw,y(db));}
+  ctx.stroke();
+  ctx.strokeStyle='#555';ctx.lineWidth=1.1;ctx.strokeRect(padL,padT,pw,ph);
+  ctx.fillStyle='#222';ctx.font='12px Tahoma,Arial';ctx.textAlign='center';
+  freqs.forEach(f=>ctx.fillText(f.toLocaleString('en-US'),x(f),padT+ph+19));
+  ctx.textAlign='right';for(let db=-20;db<=120;db+=20)ctx.fillText(String(db),padL-8,y(db)+4);
+  ctx.textAlign='center';ctx.fillText('Frequency (Hz)',padL+pw/2,padT+ph+42);
+  ctx.save();ctx.translate(14,padT+ph/2);ctx.rotate(-Math.PI/2);ctx.fillText('Hearing threshold (dB HL)',0,0);ctx.restore();
+  const series=[
+    {ear:'R',type:'b',label:'R Baseline',dash:[],color:'#333',shape:'O'},
+    {ear:'R',type:'m',label:'R Monitoring',dash:[7,4],color:'#1b5f91',shape:'O'},
+    {ear:'R',type:'c',label:'R Confirmation',dash:[2,4],color:'#21815b',shape:'O'},
+    {ear:'L',type:'b',label:'L Baseline',dash:[],color:'#666',shape:'X'},
+    {ear:'L',type:'m',label:'L Monitoring',dash:[7,4],color:'#1b5f91',shape:'X'},
+    {ear:'L',type:'c',label:'L Confirmation',dash:[2,4],color:'#21815b',shape:'X'}
+  ];
+  series.forEach((s,i)=>{
+    const data=s.ear==='R'?(s.type==='b'?R.b:s.type==='m'?R.m:R.c):(s.type==='b'?L.b:s.type==='m'?L.m:L.c);
+    const notchResult=s.ear==='R'?R.notch:L.notch;
+    const notchThisEar=new Set([...notchResult.coles,...notchResult.wilson].map(v=>v.f));
+    ctx.setLineDash(s.dash);ctx.strokeStyle=s.color;ctx.lineWidth=2;ctx.beginPath();
+    let connecting=false;
+    freqs.forEach(f=>{
+      if(!audioHas(data,[f])){connecting=false;return;}
+      if(connecting)ctx.lineTo(x(f),y(data[f]));else ctx.moveTo(x(f),y(data[f]));
+      connecting=true;
+    });ctx.stroke();ctx.setLineDash([]);
+    freqs.forEach(f=>{
+      if(!audioHas(data,[f]))return;
+      const xx=x(f),yy=y(data[f]);ctx.lineWidth=2;ctx.strokeStyle=s.color;ctx.fillStyle='#fff';
+      if(s.shape==='O'){ctx.beginPath();ctx.arc(xx,yy,4.1,0,Math.PI*2);ctx.fill();ctx.stroke();}
+      else{ctx.beginPath();ctx.moveTo(xx-4,yy-4);ctx.lineTo(xx+4,yy+4);ctx.moveTo(xx+4,yy-4);ctx.lineTo(xx-4,yy+4);ctx.stroke();}
+      if(s.type==='m'&&notchThisEar.has(f)){
+        ctx.beginPath();ctx.arc(xx,yy,8.5,0,Math.PI*2);ctx.strokeStyle='#c18509';ctx.lineWidth=1.7;ctx.stroke();
+      }
+    });
+    const lx=75+(i%3)*255,ly=17+Math.floor(i/3)*19;
+    ctx.strokeStyle=s.color;ctx.setLineDash(s.dash);ctx.lineWidth=2;
+    ctx.beginPath();ctx.moveTo(lx,ly-4);ctx.lineTo(lx+25,ly-4);ctx.stroke();ctx.setLineDash([]);
+    ctx.textAlign='left';ctx.font='12px Tahoma,Arial';ctx.fillStyle='#222';ctx.fillText(s.label,lx+32,ly);
+  });
+}
+
+document.getElementById('standaloneRoot').innerHTML=renderHearing();calcAudio();
+</script></body></html>
